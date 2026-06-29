@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Trophy, RotateCcw, AlertCircle } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
-import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { SkeletonCards } from '../components/ui/SkeletonCards';
 import { EmptyState } from '../components/ui/EmptyState';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
@@ -11,6 +11,7 @@ import {
 } from '../utils/api';
 import { ergastColor } from '../utils/colors';
 import type { JolpicaRace, DriverStanding, ConstructorStanding } from '../types';
+import styles from './ResultsPage.module.css';
 
 export default function ResultsPage() {
   const [races, setRaces] = useState<JolpicaRace[]>([]);
@@ -58,152 +59,47 @@ export default function ResultsPage() {
     (r) => r.status !== 'Finished' && !r.status?.startsWith('+')
   );
 
-  const thStyleDark: React.CSSProperties = {
-    background: 'var(--bg3)',
-    color: '#e10600',
-    padding: '8px 12px',
-    fontFamily: 'Orbitron',
-    fontSize: 10,
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-    textAlign: 'left',
-  };
-
   return (
-    <div className="section-enter">
-      <div className="section-header">
-        <SectionHeader
-          title={`${YEAR}`}
-          accent="Results"
-          group="Race & Stats"
-          icon="🏆"
-          intro="Live race results, driver championship standings and constructor standings — powered by the Jolpica F1 API."
-        />
-        <BookmarkButton sectionId="results" />
-      </div>
+    <div className={styles.page}>
+      <SectionHeader
+        title={`${YEAR}`}
+        accent="Results"
+        group="Race & Stats"
+        icon={Trophy}
+        intro="Live race results, driver championship standings and constructor standings — powered by the Jolpica F1 API."
+        sectionId="results"
+      />
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          marginBottom: 16,
-          flexWrap: 'wrap',
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '4px 12px',
-            background: 'rgba(0,220,120,0.08)',
-            border: '1px solid rgba(0,220,120,0.25)',
-            borderRadius: 20,
-          }}
-        >
-          <div
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: loading ? '#666' : '#00dc78',
-              boxShadow: loading ? 'none' : '0 0 6px #00dc78',
-            }}
-          />
-          <span
-            style={{
-              fontSize: 10,
-              color: '#00dc78',
-              fontFamily: 'Orbitron',
-              letterSpacing: 1,
-            }}
-          >
-            LIVE · Jolpica F1 API
-          </span>
+      <div className={styles.liveBar}>
+        <div className={styles.liveBadge}>
+          <div className={styles.liveDot} data-loading={loading} />
+          <span className={styles.liveText}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && (
-          <span style={{ fontSize: 10, color: 'var(--text4)' }}>
+          <span className={styles.lastUpdated}>
             Updated {lastUpdated.toLocaleTimeString()}
           </span>
         )}
         <button
+          className={styles.refreshBtn}
           onClick={loadAll}
           disabled={loading}
-          style={{
-            marginLeft: 'auto',
-            padding: '6px 14px',
-            background: 'transparent',
-            border: '1px solid var(--border2)',
-            color: 'var(--text3)',
-            fontFamily: 'Orbitron',
-            fontSize: 9,
-            letterSpacing: 2,
-            cursor: loading ? 'wait' : 'pointer',
-            borderRadius: 20,
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#e10600';
-            e.currentTarget.style.color = 'var(--text)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = '';
-            e.currentTarget.style.color = 'var(--text3)';
-          }}
           aria-label="Refresh results"
         >
-          <span className={loading ? 'spin' : ''}>↻</span> Refresh
+          <RotateCcw size={14} className={loading ? styles.spin : ''} /> Refresh
         </button>
       </div>
 
       {loading && <SkeletonCards count={4} />}
 
       {error && !loading && (
-        <div
-          className="card"
-          style={{
-            borderLeft: '3px solid #e10600',
-            padding: 24,
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 11,
-              color: '#e10600',
-              letterSpacing: 2,
-              marginBottom: 8,
-            }}
-          >
-            DATA UNAVAILABLE
-          </div>
-          <p
-            style={{
-              fontSize: 12,
-              color: 'var(--text3)',
-              lineHeight: 1.7,
-              marginBottom: 14,
-            }}
-          >
+        <div className={styles.errorCard}>
+          <AlertCircle size={32} className={styles.errorIcon} />
+          <div className={styles.errorTitle}>DATA UNAVAILABLE</div>
+          <p className={styles.errorMessage}>
             {error} — please try again shortly.
           </p>
-          <button
-            onClick={loadAll}
-            style={{
-              padding: '8px 18px',
-              background: '#e10600',
-              border: 'none',
-              color: '#fff',
-              fontFamily: 'Orbitron',
-              fontSize: 9,
-              letterSpacing: 2,
-              cursor: 'pointer',
-              borderRadius: 20,
-            }}
-          >
+          <button className={styles.retryBtn} onClick={loadAll}>
             RETRY
           </button>
         </div>
@@ -211,7 +107,7 @@ export default function ResultsPage() {
 
       {!loading && !error && races.length === 0 && (
         <EmptyState
-          icon="🏆"
+          icon={Trophy}
           title={`NO RACES YET IN ${YEAR}`}
           sub="Race data will appear here once the season begins."
         />
@@ -219,38 +115,14 @@ export default function ResultsPage() {
 
       {!loading && races.length > 0 && (
         <>
-          {/* Race selector */}
-          <div style={{ marginBottom: 20 }}>
-            <div
-              style={{
-                fontSize: 10,
-                color: 'var(--text3)',
-                fontFamily: 'Orbitron',
-                letterSpacing: 2,
-                textTransform: 'uppercase',
-                marginBottom: 10,
-              }}
-            >
-              Select Race
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          <div className={styles.raceSelector}>
+            <div className={styles.selectorLabel}>Select Race</div>
+            <div className={styles.raceButtons}>
               {races.map((r, i) => (
                 <button
                   key={r.round}
+                  className={`${styles.raceBtn} ${selectedIdx === i ? styles.raceBtnActive : ''}`}
                   onClick={() => setSelectedIdx(i)}
-                  style={{
-                    padding: '5px 10px',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    fontFamily: 'Orbitron',
-                    fontSize: 9,
-                    letterSpacing: 1,
-                    textTransform: 'uppercase',
-                    transition: 'all 0.2s',
-                    background: selectedIdx === i ? '#e10600' : 'transparent',
-                    border: `1px solid ${selectedIdx === i ? '#e10600' : 'var(--border2)'}`,
-                    color: selectedIdx === i ? '#fff' : '#888',
-                  }}
                   aria-label={`Select race ${r.raceName}`}
                 >
                   R{r.round}{' '}
@@ -260,42 +132,12 @@ export default function ResultsPage() {
             </div>
           </div>
 
-          {/* Selected race header */}
           {selectedRace && (
-            <div
-              className="card"
-              style={{ marginBottom: 20, borderLeft: '3px solid #e10600' }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  flexWrap: 'wrap',
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: 'Orbitron',
-                    fontSize: 11,
-                    color: '#e10600',
-                    letterSpacing: 2,
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Round {selectedRace.round}
-                </div>
-                <div
-                  style={{
-                    fontFamily: 'Orbitron',
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: 'var(--text)',
-                  }}
-                >
-                  {selectedRace.raceName}
-                </div>
-                <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text3)' }}>
+            <div className={styles.raceCard}>
+              <div className={styles.raceHeader}>
+                <div className={styles.roundLabel}>Round {selectedRace.round}</div>
+                <div className={styles.raceName}>{selectedRace.raceName}</div>
+                <div className={styles.raceMeta}>
                   {selectedRace.Circuit?.circuitName} ·{' '}
                   {new Date(selectedRace.date).toLocaleDateString('en-GB', {
                     day: 'numeric',
@@ -307,130 +149,65 @@ export default function ResultsPage() {
             </div>
           )}
 
-          {/* Results table */}
           {raceResults.length > 0 ? (
             <>
-              <div style={{ overflowX: 'auto', marginBottom: 24 }}>
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    minWidth: 480,
-                  }}
-                >
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
                   <thead>
                     <tr>
-                      {['Pos', 'Driver', 'Team', 'Pts', 'Laps', 'Status'].map(
-                        (h) => (
-                          <th
-                            key={h}
-                            style={{
-                              background: '#e10600',
-                              color: '#fff',
-                              padding: '9px 12px',
-                              textAlign: 'left',
-                              fontFamily: 'Orbitron',
-                              fontSize: 10,
-                              letterSpacing: 2,
-                              textTransform: 'uppercase',
-                            }}
-                          >
-                            {h}
-                          </th>
-                        )
-                      )}
+                      {['Pos', 'Driver', 'Team', 'Pts', 'Laps', 'Status'].map((h) => (
+                        <th key={h} className={styles.th}>
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
                     {finishers.map((row) => {
                       const cId = row.Constructor?.constructorId || '';
                       const col = ergastColor(cId);
+                      const pos = parseInt(row.position, 10);
                       return (
-                        <tr
-                          key={row.number}
-                          style={{ borderBottom: '1px solid var(--border)' }}
-                        >
-                          <td style={{ padding: '10px 12px' }}>
+                        <tr key={row.number} className={styles.tr}>
+                          <td className={styles.td}>
                             <span
-                              className={`pos-badge${
-                                row.position === '1'
-                                  ? ' p1'
-                                  : row.position === '2'
-                                    ? ' p2'
-                                    : row.position === '3'
-                                      ? ' p3'
-                                      : ''
+                              className={`${styles.posBadge} ${
+                                pos === 1 ? styles.gold : pos === 2 ? styles.silver : pos === 3 ? styles.bronze : ''
                               }`}
                             >
                               {row.position}
                             </span>
                           </td>
-                          <td style={{ padding: '10px 12px' }}>
-                            <div
-                              style={{
-                                fontWeight: 700,
-                                color: 'var(--text)',
-                                fontSize: 13,
-                              }}
-                            >
+                          <td className={styles.td}>
+                            <div className={styles.driverName}>
                               {row.Driver.givenName} {row.Driver.familyName}
                             </div>
-                            <div
-                              style={{
-                                fontSize: 10,
-                                color: 'var(--text3)',
-                                marginTop: 1,
-                                fontFamily: 'Orbitron',
-                              }}
-                            >
+                            <div className={styles.driverCode}>
                               {row.Driver.code}
                             </div>
                           </td>
-                          <td style={{ padding: '10px 12px' }}>
+                          <td className={styles.td}>
                             <span
+                              className={styles.teamBadge}
                               style={{
-                                background: col + '22',
+                                background: `${col}22`,
                                 color: col,
-                                border: `1px solid ${col}44`,
-                                padding: '3px 8px',
-                                borderRadius: 2,
-                                fontSize: 10,
-                                fontWeight: 700,
-                                whiteSpace: 'nowrap',
+                                borderColor: `${col}44`,
                               }}
                             >
                               {row.Constructor?.name}
                             </span>
                           </td>
-                          <td
-                            style={{
-                              padding: '10px 12px',
-                              fontFamily: 'Orbitron',
-                              fontWeight: 700,
-                              color: parseInt(row.position) <= 3 ? '#e10600' : '#aaa',
-                              fontSize: 13,
-                            }}
-                          >
-                            {row.points || '—'}
+                          <td className={`${styles.td} ${styles.pointsCell}`}>
+                            <span className={pos <= 3 ? styles.topPoints : ''}>
+                              {row.points || '—'}
+                            </span>
                           </td>
-                          <td
-                            style={{
-                              padding: '10px 12px',
-                              fontSize: 12,
-                              color: 'var(--text3)',
-                            }}
-                          >
-                            {row.laps}
-                          </td>
-                          <td
-                            style={{
-                              padding: '10px 12px',
-                              fontSize: 11,
-                              color:
-                                row.status === 'Finished' ? '#00dc78' : 'var(--text3)',
-                            }}
-                          >
-                            {row.status}
+                          <td className={styles.td}>{row.laps}</td>
+                          <td className={styles.td}>
+                            <span className={row.status === 'Finished' ? styles.finished : styles.statusText}>
+                              {row.status}
+                            </span>
                           </td>
                         </tr>
                       );
@@ -441,60 +218,17 @@ export default function ResultsPage() {
 
               {dnfs.length > 0 && (
                 <>
-                  <div
-                    className="section-title"
-                    style={{
-                      fontSize: 'clamp(13px,3vw,18px)',
-                      marginBottom: 8,
-                    }}
-                  >
-                    Did Not <span>Finish</span>
-                  </div>
-                  <div className="section-line" />
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns:
-                        'repeat(auto-fill, minmax(min(100%,260px),1fr))',
-                      gap: 10,
-                      marginBottom: 32,
-                    }}
-                  >
+                  <div className={styles.sectionTitle}>Did Not <span>Finish</span></div>
+                  <div className={styles.dnfGrid}>
                     {dnfs.map((d) => {
                       const col = ergastColor(d.Constructor?.constructorId || '');
                       return (
-                        <div
-                          key={d.number}
-                          style={{
-                            background: 'var(--card-bg)',
-                            border: '1px solid var(--border)',
-                            borderLeft: `3px solid ${col}`,
-                            padding: '12px 14px',
-                            borderRadius: 2,
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontWeight: 700,
-                              color: 'var(--text)',
-                              fontSize: 13,
-                              marginBottom: 4,
-                            }}
-                          >
+                        <div key={d.number} className={styles.dnfCard} style={{ borderLeftColor: col }}>
+                          <div className={styles.dnfDriver}>
                             {d.Driver.givenName} {d.Driver.familyName}
                           </div>
-                          <div
-                            style={{
-                              fontSize: 10,
-                              color: 'var(--text3)',
-                              textTransform: 'uppercase',
-                              letterSpacing: 1,
-                              marginBottom: 4,
-                            }}
-                          >
-                            {d.Constructor?.name}
-                          </div>
-                          <div style={{ fontSize: 11, color: 'var(--text3)' }}>
+                          <div className={styles.dnfTeam}>{d.Constructor?.name}</div>
+                          <div className={styles.dnfMeta}>
                             {d.status} · {d.laps} laps
                           </div>
                         </div>
@@ -506,49 +240,21 @@ export default function ResultsPage() {
             </>
           ) : (
             !loading && (
-              <div
-                className="card"
-                style={{ textAlign: 'center', padding: 32, marginBottom: 24 }}
-              >
-                <div
-                  style={{
-                    fontFamily: 'Orbitron',
-                    fontSize: 10,
-                    color: 'var(--text3)',
-                    letterSpacing: 2,
-                  }}
-                >
-                  NO RESULTS FOR THIS RACE YET
-                </div>
+              <div className={styles.noResults}>
+                NO RESULTS FOR THIS RACE YET
               </div>
             )
           )}
 
-          {/* Driver Championship Standings */}
           {driverStandings.length > 0 && (
             <>
-              <div
-                className="section-title"
-                style={{
-                  fontSize: 'clamp(13px,3vw,18px)',
-                  marginBottom: 8,
-                }}
-              >
-                Drivers' <span>Championship</span>
-              </div>
-              <div className="section-line" />
-              <div style={{ overflowX: 'auto', marginBottom: 24 }}>
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    minWidth: 360,
-                  }}
-                >
+              <div className={styles.sectionTitle}>Drivers' <span>Championship</span></div>
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
                   <thead>
                     <tr>
                       {['Pos', 'Driver', 'Team', 'Wins', 'Pts'].map((h) => (
-                        <th key={h} style={thStyleDark}>
+                        <th key={h} className={styles.thDark}>
                           {h}
                         </th>
                       ))}
@@ -557,82 +263,39 @@ export default function ResultsPage() {
                   <tbody>
                     {driverStandings.map((row) => {
                       const col = ergastColor(row.constructorId);
+                      const isTop3 = row.pos <= 3;
                       return (
-                        <tr
-                          key={row.name}
-                          style={{ borderBottom: '1px solid var(--border)' }}
-                        >
-                          <td style={{ padding: '8px 12px' }}>
+                        <tr key={row.name} className={styles.tr}>
+                          <td className={styles.td}>
                             <span
-                              className={`pos-badge${
-                                row.pos === 1
-                                  ? ' p1'
-                                  : row.pos === 2
-                                    ? ' p2'
-                                    : row.pos === 3
-                                      ? ' p3'
-                                      : ''
+                              className={`${styles.posBadge} ${
+                                row.pos === 1 ? styles.gold : row.pos === 2 ? styles.silver : row.pos === 3 ? styles.bronze : ''
                               }`}
                             >
                               {row.pos}
                             </span>
                           </td>
-                          <td style={{ padding: '8px 12px' }}>
-                            <div
-                              style={{
-                                fontSize: 13,
-                                color: row.pos <= 3 ? '#fff' : '#bbb',
-                                fontWeight: row.pos <= 3 ? 700 : 400,
-                              }}
-                            >
+                          <td className={styles.td}>
+                            <div className={isTop3 ? styles.driverNameTop : styles.driverName}>
                               {row.name}
                             </div>
-                            <div
-                              style={{
-                                fontSize: 9,
-                                color: 'var(--text4)',
-                                fontFamily: 'Orbitron',
-                                letterSpacing: 1,
-                              }}
-                            >
-                              {row.code}
-                            </div>
+                            <div className={styles.driverCode}>{row.code}</div>
                           </td>
-                          <td style={{ padding: '8px 12px' }}>
+                          <td className={styles.td}>
                             <span
+                              className={styles.teamBadge}
                               style={{
-                                background: col + '22',
+                                background: `${col}22`,
                                 color: col,
-                                border: `1px solid ${col}44`,
-                                padding: '2px 7px',
-                                borderRadius: 2,
-                                fontSize: 10,
-                                fontWeight: 700,
+                                borderColor: `${col}44`,
                               }}
                             >
                               {row.team}
                             </span>
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 12px',
-                              fontFamily: 'Orbitron',
-                              fontSize: 12,
-                              color: 'var(--text3)',
-                            }}
-                          >
-                            {row.wins}
-                          </td>
-                          <td
-                            style={{
-                              padding: '8px 12px',
-                              fontFamily: 'Orbitron',
-                              fontWeight: 700,
-                              fontSize: 13,
-                              color: row.pos <= 3 ? '#e10600' : '#aaa',
-                            }}
-                          >
-                            {row.pts}
+                          <td className={`${styles.td} ${styles.monoCell}`}>{row.wins}</td>
+                          <td className={`${styles.td} ${styles.pointsCell}`}>
+                            <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
                           </td>
                         </tr>
                       );
@@ -643,31 +306,15 @@ export default function ResultsPage() {
             </>
           )}
 
-          {/* Constructor Championship Standings */}
           {constructorStandings.length > 0 && (
             <>
-              <div
-                className="section-title"
-                style={{
-                  fontSize: 'clamp(13px,3vw,18px)',
-                  marginBottom: 8,
-                }}
-              >
-                Constructors' <span>Championship</span>
-              </div>
-              <div className="section-line" />
-              <div style={{ overflowX: 'auto', marginBottom: 8 }}>
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    minWidth: 300,
-                  }}
-                >
+              <div className={styles.sectionTitle}>Constructors' <span>Championship</span></div>
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
                   <thead>
                     <tr>
                       {['Pos', 'Constructor', 'Wins', 'Pts'].map((h) => (
-                        <th key={h} style={thStyleDark}>
+                        <th key={h} className={styles.thDark}>
                           {h}
                         </th>
                       ))}
@@ -676,61 +323,33 @@ export default function ResultsPage() {
                   <tbody>
                     {constructorStandings.map((row) => {
                       const col = ergastColor(row.constructorId);
+                      const isTop3 = row.pos <= 3;
                       return (
-                        <tr
-                          key={row.name}
-                          style={{ borderBottom: '1px solid var(--border)' }}
-                        >
-                          <td style={{ padding: '8px 12px' }}>
+                        <tr key={row.name} className={styles.tr}>
+                          <td className={styles.td}>
                             <span
-                              className={`pos-badge${
-                                row.pos === 1
-                                  ? ' p1'
-                                  : row.pos === 2
-                                    ? ' p2'
-                                    : row.pos === 3
-                                      ? ' p3'
-                                      : ''
+                              className={`${styles.posBadge} ${
+                                row.pos === 1 ? styles.gold : row.pos === 2 ? styles.silver : row.pos === 3 ? styles.bronze : ''
                               }`}
                             >
                               {row.pos}
                             </span>
                           </td>
-                          <td style={{ padding: '8px 12px' }}>
+                          <td className={styles.td}>
                             <span
+                              className={styles.teamBadge}
                               style={{
-                                background: col + '22',
+                                background: `${col}22`,
                                 color: col,
-                                border: `1px solid ${col}44`,
-                                padding: '2px 10px',
-                                borderRadius: 2,
-                                fontSize: 11,
-                                fontWeight: 700,
+                                borderColor: `${col}44`,
                               }}
                             >
                               {row.name}
                             </span>
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 12px',
-                              fontFamily: 'Orbitron',
-                              fontSize: 12,
-                              color: 'var(--text3)',
-                            }}
-                          >
-                            {row.wins}
-                          </td>
-                          <td
-                            style={{
-                              padding: '8px 12px',
-                              fontFamily: 'Orbitron',
-                              fontWeight: 700,
-                              fontSize: 13,
-                              color: row.pos <= 3 ? '#e10600' : '#aaa',
-                            }}
-                          >
-                            {row.pts}
+                          <td className={`${styles.td} ${styles.monoCell}`}>{row.wins}</td>
+                          <td className={`${styles.td} ${styles.pointsCell}`}>
+                            <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
                           </td>
                         </tr>
                       );
@@ -738,14 +357,7 @@ export default function ResultsPage() {
                   </tbody>
                 </table>
               </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  color: 'var(--text4)',
-                  textAlign: 'center',
-                  marginBottom: 4,
-                }}
-              >
+              <div className={styles.footerNote}>
                 After {races.length} of 22 rounds · Data via Jolpica F1 API
               </div>
             </>

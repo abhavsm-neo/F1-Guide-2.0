@@ -1,0 +1,11 @@
+.page {
+  composes: anim-fade-in from '../styles/animations.css';
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}

@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Users, Search } from 'lucide-react';
 import { DRIVERS_2025 } from '../data/drivers';
 import { DriverCard } from '../components/ui/DriverCard';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
+import styles from './DriversPage.module.css';
 
 const TEAM_FILTERS = [
   'All',
@@ -52,41 +54,41 @@ export default function DriversPage() {
   }, [source, search, filter]);
 
   return (
-    <div className="section-enter">
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="2026"
           accent="Drivers"
           group="2026 Season"
-          icon="🏎️"
+          icon={Users}
           intro="All 22 drivers on the 2026 grid — their career stats, ratings, and the story behind each one. Tap any card to reveal detailed ratings and media profile."
         />
         <BookmarkButton sectionId="drivers" />
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+      <div className={styles.toggleRow}>
         <button
-          className={`year-btn${!showDropped ? ' active' : ''}`}
+          className={!showDropped ? styles.yearBtnActive : styles.yearBtn}
           onClick={() => setShowDropped(false)}
           aria-label={`Show active drivers (${active.length})`}
         >
-          🏎️ Active ({active.length})
+          <Users size={14} /> Active ({active.length})
         </button>
         <button
-          className={`year-btn${showDropped ? ' active' : ''}`}
+          className={showDropped ? styles.yearBtnActive : styles.yearBtn}
           onClick={() => setShowDropped(true)}
           aria-label={`Show dropped drivers (${dropped.length})`}
         >
-          💀 No 2026 Seat ({dropped.length})
+          No 2026 Seat ({dropped.length})
         </button>
       </div>
 
-      <div className="search-wrap">
-        <span className="search-icon" aria-hidden="true">
-          🔍
+      <div className={styles.searchWrap}>
+        <span className={styles.searchIcon} aria-hidden="true">
+          <Search size={16} />
         </span>
         <input
-          className="search-input"
+          className={styles.searchInput}
           placeholder="Search drivers or teams..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -94,11 +96,11 @@ export default function DriversPage() {
         />
       </div>
 
-      <div className="filter-row" role="group" aria-label="Team filter">
+      <div className={styles.filterRow} role="group" aria-label="Team filter">
         {TEAM_FILTERS.map((f) => (
           <button
             key={f}
-            className={`filter-pill${filter === f ? ' active' : ''}`}
+            className={filter === f ? styles.filterPillActive : styles.filterPill}
             onClick={() => setFilter(f)}
             aria-pressed={filter === f}
           >
@@ -107,7 +109,7 @@ export default function DriversPage() {
         ))}
       </div>
 
-      <div className="card-grid">
+      <div className={styles.cardGrid}>
         {filtered.map((d) => (
           <div
             key={d.id}
@@ -123,7 +125,7 @@ export default function DriversPage() {
 
       {filtered.length === 0 && (
         <EmptyState
-          icon="🏎️"
+          icon={Users}
           title="NO DRIVERS FOUND"
           sub={`No drivers match "${search || filter}" — try clearing your search or filter.`}
         />

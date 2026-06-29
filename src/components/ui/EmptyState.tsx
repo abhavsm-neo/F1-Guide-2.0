@@ -1,15 +1,29 @@
+import type { LucideIcon } from 'lucide-react';
+import styles from './EmptyState.module.css';
+
 interface EmptyStateProps {
-  icon?: string;
+  icon?: LucideIcon;
   title?: string;
   sub?: string;
+  action?: { label: string; onClick: () => void };
 }
 
-export function EmptyState({ icon = '🔍', title = 'NOTHING FOUND', sub = 'Try a different search or filter.' }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  title = 'NOTHING FOUND',
+  sub = 'Try a different search or filter.',
+  action,
+}: EmptyStateProps) {
   return (
-    <div className="empty-state">
-      <div className="empty-state-icon">{icon}</div>
-      <div className="empty-state-title">{title}</div>
-      <div className="empty-state-sub">{sub}</div>
+    <div className={styles.container} role="status" aria-live="polite">
+      {Icon && <Icon size={48} className={styles.icon} aria-hidden="true" />}
+      <div className={styles.title}>{title}</div>
+      <div className={styles.subtitle}>{sub}</div>
+      {action && (
+        <button className={styles.actionButton} onClick={action.onClick}>
+          {action.label}
+        </button>
+      )}
     </div>
   );
 }

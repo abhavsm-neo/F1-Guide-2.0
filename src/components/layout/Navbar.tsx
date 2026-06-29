@@ -1,105 +1,105 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { NAV_GROUPS } from '../../data/nav';
+import { useState, useEffect } from 'react';
+import { Menu, Search, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
-import { GlobalSearch } from './GlobalSearch';
+import { RACE_CALENDAR_2026 } from '../../data/circuits';
+import styles from './Navbar.module.css';
 
 export function Navbar() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { darkMode, toggleTheme } = useTheme();
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const navRef = useRef<HTMLElement>(null);
-
-  const activePath = location.pathname.slice(1) || 'home';
+  const [timeLeft, setTimeLeft] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
+  const [nextRace, setNextRace] = useState<typeof RACE_CALENDAR_2026[0] | null>(null);
 
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (!navRef.current?.contains(e.target as Node)) setOpenGroup(null);
+    const upcoming = RACE_CALENDAR_2026
+      .filter(r => !r.cancelled && new Date(r.date) > new Date())
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    if (!upcoming.length) return;
+    setNextRace(upcoming[0]);
+
+    function tick() {
+      const diff = new Date(upcoming[0].date).getTime() - new Date().getTime();
+      if (diff <= 0) { setTimeLeft({ d: 0, h: 0, m: 0, s: 0 }); return; }
+      setTimeLeft({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
     }
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
 
-  const toggleGroup = (label: string) => {
-    setOpenGroup(g => g === label ? null : label);
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('open-search'));
+      }
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, []);
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  const openMobileNav = () => {
+    window.dispatchEvent(new CustomEvent('open-mobile-nav'));
+  };
+
+  const openSearch = () => {
+    window.dispatchEvent(new CustomEvent('open-search'));
   };
 
   return (
-    <>
-      <nav className="nav" ref={navRef} aria-label="Main navigation">
-        <div className="nav-inner">
-          <Link
-            to="/"
-            className="nav-dropdown-item"
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
-              borderRadius: 8, border: 'none', background: activePath === 'home' ? 'rgba(225,6,0,0.08)' : 'transparent',
-              cursor: 'pointer', color: activePath === 'home' ? '#e10600' : 'var(--text2)',
-              fontFamily: 'Exo 2, sans-serif', fontSize: 13, fontWeight: activePath === 'home' ? 700 : 500,
-              textDecoration: 'none',
-            }}
-          >
-            🏠 Home
-          </Link>
-          {NAV_GROUPS.map(group => {
-            const isOpen = openGroup === group.label;
-            const hasActive = group.sections.some(s => s.id === activePath);
-            return (
-              <div key={group.label} className={`nav-group${isOpen ? ' open' : ''}${hasActive ? ' has-active' : ''}`}>
-                <div
-                  className="nav-group-label"
-                  onClick={() => toggleGroup(group.label)}
-                  role="button"
-                  aria-expanded={isOpen}
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleGroup(group.label); } }}
-                >
-                  {group.label}
-                  <span className="nav-chevron" aria-hidden="true">▼</span>
-                </div>
-                <div className="nav-dropdown" role="menu">
-                  {group.sections.map(s => (
-                    <Link
-                      key={s.id}
-                      to={`/${s.id}`}
-                      className={`nav-dropdown-item${activePath === s.id ? ' active' : ''}`}
-                      onClick={() => setOpenGroup(null)}
-                      role="menuitem"
-                    >
-                      <span className="nav-dropdown-icon" aria-hidden="true">{s.icon}</span>
-                      <span>
-                        <div className="nav-dropdown-title">{s.label}</div>
-                        <div className="nav-dropdown-desc">{s.desc}</div>
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+    <header className={styles.navbar}>
+      <div className={styles.inner}>
+        <button
+          className={styles.iconBtn}
+          onClick={openMobileNav}
+          aria-label="Open menu"
+          aria-controls="mobile-nav-sheet"
+        >
+          <Menu size={20} strokeWidth={2} />
+        </button>
+
+        <div className={styles.countdown}>
+          {nextRace && timeLeft && (
+            <>
+              <span className={styles.flag} aria-hidden="true">{nextRace.flag}</span>
+              <span className={styles.raceName}>{nextRace.name}</span>
+              <span className={styles.timer} aria-label="Countdown timer">
+                <span className={styles.timerNum}>{pad(timeLeft.d)}</span>
+                <span className={styles.timerSep}>:</span>
+                <span className={styles.timerNum}>{pad(timeLeft.h)}</span>
+                <span className={styles.timerSep}>:</span>
+                <span className={styles.timerNum}>{pad(timeLeft.m)}</span>
+                <span className={styles.timerSep}>:</span>
+                <span className={styles.timerNum}>{pad(timeLeft.s)}</span>
+              </span>
+            </>
+          )}
+        </div>
+
+        <div className={styles.actions}>
           <button
-            className="theme-toggle"
-            onClick={() => navigate('/bookmarks')}
-            title="My Bookmarks"
-            aria-label="My Bookmarks"
-            style={{ fontSize: 16 }}
+            className={styles.iconBtn}
+            onClick={openSearch}
+            aria-label="Search"
           >
-            🔖
+            <Search size={20} strokeWidth={2} />
           </button>
           <button
-            className="theme-toggle"
+            className={styles.iconBtn}
             onClick={toggleTheme}
-            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? <Sun size={20} strokeWidth={2} /> : <Moon size={20} strokeWidth={2} />}
           </button>
         </div>
-      </nav>
-      <div className="global-search-bar">
-        <GlobalSearch />
       </div>
-    </>
+    </header>
   );
 }

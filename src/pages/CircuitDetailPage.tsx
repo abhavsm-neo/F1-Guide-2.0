@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { MapPin, ArrowLeft, Calendar } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
+import styles from './CircuitDetailPage.module.css';
 
 export default function CircuitDetailPage() {
   const { circuitId } = useParams<{ circuitId: string }>();
@@ -11,12 +13,10 @@ export default function CircuitDetailPage() {
 
   const race = useMemo(() => {
     if (!circuitId) return undefined;
-    // Try round number first
     const byRound = RACE_CALENDAR_2026.find(
       (r) => String(r.round) === circuitId
     );
     if (byRound) return byRound;
-    // Try name/circuit matching
     const q = circuitId.toLowerCase().replace(/-/g, ' ');
     return (
       RACE_CALENDAR_2026.find(
@@ -29,18 +29,18 @@ export default function CircuitDetailPage() {
 
   if (!race) {
     return (
-      <div className="section-enter">
-        <div className="section-header">
+      <div className={styles.page}>
+        <div className={styles.sectionHeader}>
           <SectionHeader
             title="Circuit"
             accent="Not Found"
             group="Race & Stats"
-            icon="🗺️"
+            icon={MapPin}
           />
           <BookmarkButton sectionId="circuits" />
         </div>
         <EmptyState
-          icon="🗺️"
+          icon={MapPin}
           title="CIRCUIT NOT FOUND"
           sub={`No circuit matches "${circuitId}". Check the circuits list.`}
         />
@@ -84,7 +84,7 @@ export default function CircuitDetailPage() {
       'BEGIN:VEVENT',
       `DTSTART:${fmt(start)}`,
       `DTEND:${fmt(end)}`,
-      `SUMMARY:🏎️ F1 ${r.name}`,
+      `SUMMARY:F1 ${r.name}`,
       `DESCRIPTION:Round ${r.round} · ${r.circuit}`,
       `LOCATION:${r.circuit}`,
       'END:VEVENT',
@@ -100,79 +100,36 @@ export default function CircuitDetailPage() {
   }
 
   return (
-    <div className="section-enter">
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title={race.name}
           accent={`Round ${race.round}`}
           group="Race & Stats"
-          icon={race.flag}
+          icon={MapPin}
         />
         <BookmarkButton sectionId="circuits" />
       </div>
 
       <button
         onClick={() => navigate('/circuits')}
-        style={{
-          padding: '6px 14px',
-          background: 'transparent',
-          border: '1px solid var(--border2)',
-          color: 'var(--text3)',
-          fontFamily: 'Orbitron',
-          fontSize: 9,
-          letterSpacing: 2,
-          cursor: 'pointer',
-          borderRadius: 20,
-          marginBottom: 20,
-          transition: 'all 0.2s',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = '#e10600';
-          e.currentTarget.style.color = 'var(--text)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = '';
-          e.currentTarget.style.color = 'var(--text3)';
-        }}
+        className={styles.backBtn}
         aria-label="Back to circuits"
       >
-        ← BACK TO CIRCUITS
+        <ArrowLeft size={14} /> Back to Circuits
       </button>
 
       {race.cancelled && (
-        <div
-          className="card"
-          style={{
-            marginBottom: 20,
-            borderLeft: '3px solid #e10600',
-            background: 'rgba(225,6,0,0.06)',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 11,
-              color: '#e10600',
-              letterSpacing: 2,
-              marginBottom: 6,
-            }}
-          >
-            CANCELLED
-          </div>
-          <p style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.7 }}>
+        <div className={styles.cancelledCard}>
+          <div className={styles.cancelledLabel}>Cancelled</div>
+          <p className={styles.cancelledText}>
             This race has been cancelled for the 2026 season.
           </p>
         </div>
       )}
 
-      <div className="card" style={{ marginBottom: 20 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: 16,
-          }}
-        >
+      <div className={styles.card}>
+        <div className={styles.statsGrid}>
           {[
             ['Circuit Length', race.length],
             ['Race Laps', race.cancelled ? '—' : String(race.laps)],
@@ -188,42 +145,18 @@ export default function CircuitDetailPage() {
             ],
           ].map(([label, value]) => (
             <div key={String(label)}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: 'var(--text4)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 1,
-                  fontFamily: 'Orbitron',
-                  marginBottom: 4,
-                }}
-              >
-                {String(label)}
-              </div>
-              <div
-                style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600 }}
-              >
-                {String(value)}
-              </div>
+              <div className={styles.statLabel}>{String(label)}</div>
+              <div className={styles.statValue}>{String(value)}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <p
-        style={{
-          fontSize: 14,
-          color: 'var(--text2)',
-          lineHeight: 1.8,
-          marginBottom: 16,
-        }}
-      >
-        {race.desc}
-      </p>
+      <p className={styles.desc}>{race.desc}</p>
 
-      <div style={{ marginBottom: 20 }}>
+      <div className={styles.tags}>
         {race.tags.map((t) => (
-          <span key={t} className="circuit-tag">
+          <span key={t} className={styles.tag}>
             {t}
           </span>
         ))}
@@ -232,50 +165,28 @@ export default function CircuitDetailPage() {
       {!race.cancelled && (
         <button
           onClick={() => downloadIcs(race)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '10px 20px',
-            background: 'rgba(0,220,120,0.1)',
-            border: '1px solid rgba(0,220,120,0.3)',
-            color: '#00dc78',
-            fontFamily: 'Orbitron',
-            fontSize: 10,
-            letterSpacing: 2,
-            cursor: 'pointer',
-            borderRadius: 6,
-            marginBottom: 28,
-          }}
+          className={styles.icsBtn}
           aria-label={`Download ${race.name} calendar event`}
         >
-          📅 ADD TO CALENDAR (.ICS)
+          <Calendar size={16} /> Add to Calendar (.ICS)
         </button>
       )}
 
-      <div
-        style={{
-          fontFamily: 'Orbitron',
-          fontSize: 11,
-          color: '#e10600',
-          letterSpacing: 2,
-          marginBottom: 12,
-        }}
-      >
-        SESSION TIMES · {tz}
+      <div className={styles.sessionTitle}>
+        Session Times · {tz}
       </div>
-      <div className="session-grid">
+      <div className={styles.sessionGrid}>
         {sessions.map((s) => {
           const d = new Date(raceDate.getTime() + s.offset);
           return (
             <div
               key={s.label}
-              className="session-card"
+              className={styles.sessionCard}
               style={{ opacity: d < new Date() ? 0.5 : 1 }}
             >
-              <div className="session-type">{s.label}</div>
-              <div className="session-time">{fmtTime(d)}</div>
-              <div className="session-date">{fmtDate(d)}</div>
+              <div className={styles.sessionType}>{s.label}</div>
+              <div className={styles.sessionTime}>{fmtTime(d)}</div>
+              <div className={styles.sessionDate}>{fmtDate(d)}</div>
             </div>
           );
         })}

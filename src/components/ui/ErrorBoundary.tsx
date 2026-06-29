@@ -1,4 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
+import { AlertCircle } from 'lucide-react';
+import styles from './ErrorBoundary.module.css';
 
 interface Props {
   children: ReactNode;
@@ -24,23 +26,22 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('ErrorBoundary caught:', error, errorInfo);
   }
 
+  handleReset = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
   render() {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="card" style={{ textAlign: 'center', padding: '40px 20px', borderLeft: '3px solid #e10600' }}>
-            <div style={{ fontSize: 32, marginBottom: 10 }}>⚠️</div>
-            <div style={{ fontFamily: 'Orbitron', fontSize: 12, color: '#e10600', letterSpacing: 2, marginBottom: 8 }}>
-              SOMETHING WENT WRONG
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--text3)', lineHeight: 1.7, marginBottom: 16 }}>
+          <div className={styles.card} role="alert" aria-live="assertive">
+            <AlertCircle size={32} className={styles.icon} aria-hidden="true" />
+            <div className={styles.title}>Something went wrong</div>
+            <p className={styles.message}>
               {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
-            <button
-              onClick={() => this.setState({ hasError: false, error: null })}
-              style={{ padding: '8px 18px', background: '#e10600', border: 'none', color: '#fff', fontFamily: 'Orbitron', fontSize: 10, letterSpacing: 2, cursor: 'pointer', borderRadius: 20 }}
-            >
-              TRY AGAIN
+            <button className={styles.retryButton} onClick={this.handleReset}>
+              Try Again
             </button>
           </div>
         )

@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
+import { BookOpen, Search, ChevronDown } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { GLOSSARY } from '../data/glossary';
+import styles from './GlossaryPage.module.css';
 
 export default function GlossaryPage() {
   const [search, setSearch] = useState('');
@@ -29,24 +31,22 @@ export default function GlossaryPage() {
   };
 
   return (
-    <div>
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="F1"
           accent="Glossary"
           group="Learn the Basics"
-          icon="📖"
+          icon={BookOpen}
           intro="Every piece of jargon you'll hear during a race weekend — explained clearly. Tap any term to expand the full definition."
         />
         <BookmarkButton sectionId="glossary" />
       </div>
 
-      <div className="search-wrap">
-        <span className="search-icon" aria-hidden="true">
-          🔍
-        </span>
+      <div className={styles.searchWrap}>
+        <Search size={16} className={styles.searchIcon} aria-hidden="true" />
         <input
-          className="search-input"
+          className={styles.searchInput}
           placeholder="Search terms..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -54,11 +54,11 @@ export default function GlossaryPage() {
         />
       </div>
 
-      <div className="filter-row" role="group" aria-label="Filter by category">
+      <div className={styles.filterRow} role="group" aria-label="Filter by category">
         {categories.map((c) => (
           <button
             key={c}
-            className={`filter-pill${cat === c ? ' active' : ''}`}
+            className={[styles.filterPill, cat === c ? styles.filterPillActive : ''].join(' ')}
             onClick={() => setCat(c)}
             aria-pressed={cat === c}
           >
@@ -67,11 +67,11 @@ export default function GlossaryPage() {
         ))}
       </div>
 
-      <div className="glossary-grid">
+      <div className={styles.glossaryGrid}>
         {filtered.map((g) => (
           <div
             key={g.term}
-            className="glossary-card"
+            className={styles.glossaryCard}
             onClick={() => toggleTerm(g.term)}
             role="button"
             tabIndex={0}
@@ -84,11 +84,11 @@ export default function GlossaryPage() {
             aria-expanded={!!expanded[g.term]}
             aria-label={`${g.term} — ${g.cat}`}
           >
-            <div className="glossary-term">
+            <div className={styles.glossaryTerm}>
               <span>{g.term}</span>
-              <span>
+              <span className={styles.glossaryMeta}>
                 <span
-                  className="glossary-cat"
+                  className={styles.glossaryCat}
                   style={{
                     background: `${g.catColor}22`,
                     color: g.catColor,
@@ -97,36 +97,20 @@ export default function GlossaryPage() {
                 >
                   {g.cat}
                 </span>
-                <span
+                <ChevronDown
+                  size={14}
+                  className={styles.chevron}
                   style={{
-                    color: 'var(--text3)',
-                    marginLeft: 8,
-                    fontSize: 10,
-                    transition: 'transform 0.2s',
-                    display: 'inline-block',
-                    transform: expanded[g.term] ? 'rotate(180deg)' : 'none',
+                    transform: expanded[g.term] ? 'rotate(180deg)' : 'rotate(0deg)',
                   }}
                   aria-hidden="true"
-                >
-                  ▼
-                </span>
+                />
               </span>
             </div>
-            {expanded[g.term] && (
-              <div className="glossary-def">{g.def}</div>
-            )}
-            {!expanded[g.term] && (
-              <div
-                className="glossary-def"
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}
-              >
-                {g.def}
-              </div>
+            {expanded[g.term] ? (
+              <div className={styles.glossaryDef}>{g.def}</div>
+            ) : (
+              <div className={styles.glossaryDefPreview}>{g.def}</div>
             )}
           </div>
         ))}
@@ -134,7 +118,7 @@ export default function GlossaryPage() {
 
       {filtered.length === 0 && (
         <EmptyState
-          icon="📖"
+          icon={BookOpen}
           title="NO TERMS FOUND"
           sub={`Nothing matches "${search}" — try a different search.`}
         />

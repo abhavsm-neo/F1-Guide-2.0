@@ -1,6 +1,7 @@
-import { memo, useState, useRef } from 'react';
+import { memo, useState } from 'react';
 import type { Team } from '../../types';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { MapPin } from 'lucide-react';
+import styles from './TeamCard.module.css';
 
 interface TeamCardProps {
   team: Team;
@@ -8,78 +9,83 @@ interface TeamCardProps {
 
 export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (reducedMotion) return;
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-    const rotX = ((y - cy) / cy) * -5;
-    const rotY = ((x - cx) / cx) * 5;
-    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px)`;
-    card.style.boxShadow = `0 20px 60px rgba(0,0,0,0.8), 0 0 30px ${team.color}20`;
-  };
-
-  const handleMouseLeave = () => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.style.transform = '';
-    card.style.boxShadow = '';
-  };
 
   return (
     <div
-      className="team-card"
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      className={styles.card}
       role="article"
       aria-label={team.name}
-      style={{ borderTop: `2px solid ${team.color}`, boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 0 0 ${team.color}` }}
     >
-      <div className="team-header" style={{ background: `linear-gradient(135deg, ${team.color}08, transparent)` }}>
-        <div className="team-color-block" style={{ background: team.color, boxShadow: `0 0 16px ${team.color}80` }} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="team-name">{team.name}</div>
-          <div className="team-base">📍 {team.base}</div>
+      {/* Top team color strip */}
+      <div
+        className={styles.colorStrip}
+        style={{ backgroundColor: team.color }}
+      />
+
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.name}>{team.name}</div>
+        <div className={styles.base}>
+          <MapPin size={12} className={styles.baseIcon} />
+          {team.base}
         </div>
       </div>
-      <div className="team-body">
-        <div className="team-row">
-          <span className="team-pill">🔧 <strong>Engine:</strong> {team.engine}</span>
-          <span className="team-pill">👔 <strong>TP:</strong> {team.tp}</span>
+
+      {/* Stats row */}
+      <div className={styles.statsRow}>
+        <div className={styles.statPair}>
+          <div className={styles.statLabel}>Engine</div>
+          <div className={styles.statValue}>{team.engine}</div>
         </div>
-        <div className="team-row">
-          <span className="team-pill">🏆 {team.championships}</span>
-          <span className="team-pill">Est. {team.founded}</span>
+        <div className={styles.statPair}>
+          <div className={styles.statLabel}>Team Principal</div>
+          <div className={styles.statValue}>{team.tp}</div>
         </div>
-        <div className="team-row" style={{ marginTop: 4 }}>
-          {team.drivers.map((d: string) => (
-            <span key={d} className="team-pill" style={{ background: team.color + '18', borderColor: team.color + '44', color: 'var(--text2)' }}>
-              🏎 {d}
-            </span>
-          ))}
+        <div className={styles.statPair}>
+          <div className={styles.statLabel}>Championships</div>
+          <div className={styles.statValue}>{team.championships}</div>
         </div>
-        <p className="team-detail" style={{ marginTop: 10 }}>{team.desc}</p>
-        {expanded && (
-          <div style={{ marginTop: 12 }}>
-            <div style={{ fontSize: 10, color: team.color, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 5, fontFamily: 'Orbitron', textShadow: `0 0 8px ${team.color}60` }}>
-              Engine Notes
-            </div>
-            <p className="team-detail">{team.engineNote}</p>
-          </div>
-        )}
-        <button className="expand-btn" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-          <span className={`expand-btn-arrow${expanded ? ' open' : ''}`}>▼</span>
-          {expanded ? 'Show Less' : 'Engine Details'}
-        </button>
+        <div className={styles.statPair}>
+          <div className={styles.statLabel}>Founded</div>
+          <div className={styles.statValue}>{team.founded}</div>
+        </div>
       </div>
+
+      {/* Driver chips */}
+      <div className={styles.driverChips}>
+        {team.drivers.map((d: string) => (
+          <span
+            key={d}
+            className={styles.driverChip}
+            style={{
+              borderColor: team.color,
+              backgroundColor: `${team.color}1A`,
+            }}
+          >
+            {d}
+          </span>
+        ))}
+      </div>
+
+      {/* Description */}
+      <p className={styles.description}>{team.desc}</p>
+
+      {/* Expanded engine notes */}
+      {expanded && (
+        <div className={styles.engineNotes}>
+          <div className={styles.engineNotesLabel}>Engine Notes</div>
+          <p className={styles.description}>{team.engineNote}</p>
+        </div>
+      )}
+
+      {/* Expand button */}
+      <button
+        className={styles.expandButton}
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+      >
+        {expanded ? 'Hide Engine Details' : 'Engine Details'}
+      </button>
     </div>
   );
 });

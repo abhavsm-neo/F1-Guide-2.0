@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RACE_CALENDAR_2026 } from '../../data/circuits';
+import styles from './RaceCountdown.module.css';
 
 export function RaceCountdown() {
   const [timeLeft, setTimeLeft] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
@@ -31,25 +32,22 @@ export function RaceCountdown() {
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <div className="countdown-wrap">
-      <div className="countdown-label">Next Race</div>
-      <div className="countdown-race">
-        {nextRace.flag} {nextRace.name} · Round {nextRace.round}
-      </div>
-      <div className="countdown-tiles" role="timer" aria-label={`Countdown to ${nextRace.name}`}>
-        {([
-          ['d', 'Days'],
-          ['h', 'Hours'],
-          ['m', 'Mins'],
-          ['s', 'Secs'],
-        ] as const).map(([k, label]) => (
-          <div className="countdown-tile" key={k}>
-            <div className="countdown-num" aria-label={`${timeLeft[k]} ${label}`}>
-              {pad(timeLeft[k])}
-            </div>
-            <div className="countdown-unit">{label}</div>
-          </div>
-        ))}
+    <div className={styles.bar} role="timer" aria-label={`Countdown to ${nextRace.name}`}>
+      <div className={styles.inner}>
+        <div className={styles.info}>
+          <span className={styles.flag} aria-hidden="true">{nextRace.flag}</span>
+          <span className={styles.name}>{nextRace.name}</span>
+          <span className={styles.meta}>Round {nextRace.round}</span>
+        </div>
+        <div className={styles.timer}>
+          <span className={styles.num}>{pad(timeLeft.d)}</span>
+          <span className={styles.sep}>:</span>
+          <span className={styles.num}>{pad(timeLeft.h)}</span>
+          <span className={styles.sep}>:</span>
+          <span className={styles.num}>{pad(timeLeft.m)}</span>
+          <span className={styles.sep}>:</span>
+          <span className={styles.num}>{pad(timeLeft.s)}</span>
+        </div>
       </div>
     </div>
   );

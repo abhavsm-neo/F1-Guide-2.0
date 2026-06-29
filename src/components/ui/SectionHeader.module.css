@@ -1,0 +1,72 @@
+.container {
+  margin-bottom: var(--space-5);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.breadcrumbItem {
+  color: var(--text-tertiary);
+}
+
+.breadcrumbSep {
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.breadcrumbCurrent {
+  color: var(--text-secondary);
+}
+
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-body);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.accentLine {
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-3);
+}
+
+.description {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.descriptionIcon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}

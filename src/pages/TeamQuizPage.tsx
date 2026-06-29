@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Brain, RotateCcw, Car } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
+import styles from './TeamQuizPage.module.css';
 
 interface TeamQuizOption {
   text: string;
@@ -95,17 +97,17 @@ const TEAM_QUIZ_QUESTIONS: TeamQuizQuestion[] = [
 ];
 
 const TEAM_QUIZ_RESULTS: Record<string, TeamQuizResult> = {
-  redbull: { name: "Oracle Red Bull Racing", emoji: "🔵", color: "#3671C6", desc: "You're a winner. Period. You expect excellence from yourself and everyone around you, you work obsessively hard, and second place makes you physically uncomfortable. You've probably already thought about tomorrow's schedule. Verstappen would approve." },
-  mercedes: { name: "Mercedes-AMG Petronas", emoji: "🩵", color: "#27F4D2", desc: "Strategic, disciplined, and always thinking three moves ahead. You built something dominant through engineering genius and systematic thinking. You handle pressure like a professional and never let emotions override logic. Hamilton's kind of person." },
-  ferrari: { name: "Scuderia Ferrari", emoji: "🔴", color: "#E8002D", desc: "Passionate, dramatic, and deeply tied to history. You feel everything intensely, you want to put on a show, and you'd rather lose brilliantly than win boringly. The Tifosi would love you — even if you occasionally forget to put the tyres on." },
-  mclaren: { name: "McLaren F1 Team", emoji: "🧡", color: "#FF8000", desc: "Methodical, innovative, and quietly building something special. You learn from every mistake, you surround yourself with great people, and your patience eventually pays off. The comeback story. Norris and Piastri's team all the way." },
-  astonmartin: { name: "Aston Martin Aramco", emoji: "💚", color: "#229971", desc: "Ambitious and refined. You have huge dreams, the resources to back them up, and a flair for doing things in style. You're playing the long game — and you've got Fernando Alonso on side, which means you're definitely not giving up." },
-  alpine: { name: "Alpine F1 Team", emoji: "💙", color: "#0093CC", desc: "Creative, passionate, and a little chaotic — but lovably so. You approach problems differently, you're not afraid to change direction, and you believe deeply in the underdog story. Also: you definitely have strong opinions about cheese." },
-  williams: { name: "Williams Racing", emoji: "🩵", color: "#64C4FF", desc: "A genuine soul with a great story to tell. You've been through tough times but you never lost your identity, and you're building back with real purpose. You don't need to shout about it — your results will do the talking." },
-  haas: { name: "MoneyGram Haas F1 Team", emoji: "⚪", color: "#B6BABD", desc: "Pragmatic, direct, and quietly competitive. You don't have the biggest budget or the fanciest factory, but you maximise what you've got. You speak your mind, you don't do politics, and you occasionally produce a massive upset result." },
-  rb: { name: "Racing Bulls", emoji: "💙", color: "#6692FF", desc: "You're the next generation energy. Young, hungry, and not intimidated by anyone. You love developing talent, you move fast, and you don't mind being overlooked — because you're about to prove everyone wrong." },
-  audi: { name: "Audi F1 Team", emoji: "🔴", color: "#BB0A21", desc: "You're here to build something historic from the ground up. You've got the resources, the engineering mindset, and the patience for a long project. The first year might be bumpy, but you're thinking decade-long. German engineering, F1 scale." },
-  cadillac: { name: "Cadillac F1 Team", emoji: "🇺🇸", color: "#CC0000", desc: "The American dream. You're bold, you back yourself against the establishment, and you're not afraid to be the newcomer in a room full of history. Everyone said it couldn't be done. You're proving them wrong, one lap at a time." },
+  redbull: { name: "Oracle Red Bull Racing", emoji: "", color: "#3671C6", desc: "You're a winner. Period. You expect excellence from yourself and everyone around you, you work obsessively hard, and second place makes you physically uncomfortable. You've probably already thought about tomorrow's schedule. Verstappen would approve." },
+  mercedes: { name: "Mercedes-AMG Petronas", emoji: "", color: "#27F4D2", desc: "Strategic, disciplined, and always thinking three moves ahead. You built something dominant through engineering genius and systematic thinking. You handle pressure like a professional and never let emotions override logic. Hamilton's kind of person." },
+  ferrari: { name: "Scuderia Ferrari", emoji: "", color: "#E8002D", desc: "Passionate, dramatic, and deeply tied to history. You feel everything intensely, you want to put on a show, and you'd rather lose brilliantly than win boringly. The Tifosi would love you — even if you occasionally forget to put the tyres on." },
+  mclaren: { name: "McLaren F1 Team", emoji: "", color: "#FF8000", desc: "Methodical, innovative, and quietly building something special. You learn from every mistake, you surround yourself with great people, and your patience eventually pays off. The comeback story. Norris and Piastri's team all the way." },
+  astonmartin: { name: "Aston Martin Aramco", emoji: "", color: "#229971", desc: "Ambitious and refined. You have huge dreams, the resources to back them up, and a flair for doing things in style. You're playing the long game — and you've got Fernando Alonso on side, which means you're definitely not giving up." },
+  alpine: { name: "Alpine F1 Team", emoji: "", color: "#0093CC", desc: "Creative, passionate, and a little chaotic — but lovably so. You approach problems differently, you're not afraid to change direction, and you believe deeply in the underdog story. Also: you definitely have strong opinions about cheese." },
+  williams: { name: "Williams Racing", emoji: "", color: "#64C4FF", desc: "A genuine soul with a great story to tell. You've been through tough times but you never lost your identity, and you're building back with real purpose. You don't need to shout about it — your results will do the talking." },
+  haas: { name: "MoneyGram Haas F1 Team", emoji: "", color: "#B6BABD", desc: "Pragmatic, direct, and quietly competitive. You don't have the biggest budget or the fanciest factory, but you maximise what you've got. You speak your mind, you don't do politics, and you occasionally produce a massive upset result." },
+  rb: { name: "Racing Bulls", emoji: "", color: "#6692FF", desc: "You're the next generation energy. Young, hungry, and not intimidated by anyone. You love developing talent, you move fast, and you don't mind being overlooked — because you're about to prove everyone wrong." },
+  audi: { name: "Audi F1 Team", emoji: "", color: "#BB0A21", desc: "You're here to build something historic from the ground up. You've got the resources, the engineering mindset, and the patience for a long project. The first year might be bumpy, but you're thinking decade-long. German engineering, F1 scale." },
+  cadillac: { name: "Cadillac F1 Team", emoji: "", color: "#CC0000", desc: "The American dream. You're bold, you back yourself against the establishment, and you're not afraid to be the newcomer in a room full of history. Everyone said it couldn't be done. You're proving them wrong, one lap at a time." },
 };
 
 export default function TeamQuizPage() {
@@ -137,13 +139,13 @@ export default function TeamQuizPage() {
   const quizResult = result ? TEAM_QUIZ_RESULTS[result] : null;
 
   return (
-    <div className="section-enter">
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="Which"
           accent="Team Are You?"
           group="Fun"
-          icon="🎯"
+          icon={Brain}
           intro="8 personality questions to find out which F1 team matches your style."
         />
         <BookmarkButton sectionId="team-quiz" />
@@ -152,78 +154,41 @@ export default function TeamQuizPage() {
       {quizResult ? (
         <div>
           <div
-            className="team-quiz-result"
+            className={styles.resultCard}
             style={{ borderColor: `${quizResult.color}44` }}
           >
-            <div style={{ fontSize: 48, marginBottom: 8 }}>🏎️</div>
-            <div
-              style={{
-                fontSize: 10,
-                color: 'var(--text3)',
-                fontFamily: 'Orbitron, sans-serif',
-                letterSpacing: 3,
-                marginBottom: 8,
-                textTransform: 'uppercase',
-              }}
-            >
-              You are...
+            <div className={styles.resultIcon} aria-hidden="true">
+              <Car size={48} />
             </div>
+            <div className={styles.resultLabel}>You are...</div>
             <div
-              className="team-result-name"
+              className={styles.resultName}
               style={{
                 color: quizResult.color,
                 textShadow: `0 0 20px ${quizResult.color}60`,
               }}
             >
-              {quizResult.emoji} {quizResult.name}
+              {quizResult.name}
             </div>
-            <p
-              style={{
-                fontSize: 13,
-                color: 'var(--text2)',
-                lineHeight: 1.8,
-                maxWidth: 480,
-                margin: '12px auto 20px',
-              }}
-            >
-              {quizResult.desc}
-            </p>
-            <button
-              className="expand-btn"
-              onClick={reset}
-              style={{
-                padding: '10px 24px',
-                fontSize: 11,
-                letterSpacing: 2,
-                fontFamily: 'Orbitron, sans-serif',
-              }}
-            >
-              🔄 Retake Quiz
+            <p className={styles.resultDesc}>{quizResult.desc}</p>
+            <button className={styles.retakeBtn} onClick={reset}>
+              <RotateCcw size={16} />
+              Retake Quiz
             </button>
           </div>
         </div>
       ) : (
-        <div style={{ maxWidth: 600 }}>
-          <div style={{ marginBottom: 16 }}>
-            <div className="quiz-progress">
+        <div className={styles.quizContainer}>
+          <div>
+            <div className={styles.progressBar}>
               <div
-                className="quiz-progress-fill"
+                className={styles.progressFill}
                 style={{
                   width: `${(step / TEAM_QUIZ_QUESTIONS.length) * 100}%`,
                 }}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: 10,
-                color: 'var(--text4)',
-                fontFamily: 'Orbitron, sans-serif',
-                letterSpacing: 1,
-                marginTop: 6,
-              }}
-            >
+            <div className={styles.progressInfo}>
               <span>
                 Question {step + 1} / {TEAM_QUIZ_QUESTIONS.length}
               </span>
@@ -232,33 +197,17 @@ export default function TeamQuizPage() {
               </span>
             </div>
           </div>
-          <div className="card" style={{ marginBottom: 20 }}>
-            <p
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: 'var(--text)',
-                lineHeight: 1.5,
-              }}
-            >
-              {q.q}
-            </p>
+          <div className={styles.questionCard}>
+            <p className={styles.questionText}>{q.q}</p>
           </div>
           {q.options.map((opt, i) => (
             <button
               key={i}
-              className="quiz-option"
+              className={styles.option}
               onClick={() => answer(opt.scores)}
               aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt.text}`}
             >
-              <span
-                style={{
-                  fontFamily: 'Orbitron, sans-serif',
-                  fontSize: 10,
-                  color: '#e10600',
-                  minWidth: 20,
-                }}
-              >
+              <span className={styles.optionLetter}>
                 {String.fromCharCode(65 + i)}
               </span>
               {opt.text}

@@ -1,36 +1,38 @@
+import { Trophy, Medal } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { ALL_TIME_RECORDS } from '../data/records';
 import { PODIUM_COLORS } from '../utils/colors';
+import styles from './RecordsPage.module.css';
 
 export default function RecordsPage() {
   return (
-    <div>
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="All-Time"
           accent="Records"
           group="Race & Stats"
-          icon="🎖️"
+          icon={Trophy}
           intro="F1 spans 75+ years and hundreds of drivers. Here are the records that define greatness."
         />
         <BookmarkButton sectionId="records" />
       </div>
 
-      <div className="records-grid">
+      <div className={styles.recordsGrid}>
         {ALL_TIME_RECORDS.map((cat) => (
-          <div key={cat.title} className="record-card">
-            <div className="record-header">
-              <span className="record-icon" aria-hidden="true">
-                {cat.icon}
+          <div key={cat.title} className={styles.recordCard}>
+            <div className={styles.recordHeader}>
+              <span className={styles.recordIcon} aria-hidden="true">
+                <Medal size={18} />
               </span>
-              <span className="record-title">{cat.title}</span>
+              <span className={styles.recordTitle}>{cat.title}</span>
             </div>
-            <div className="record-body">
+            <div className={styles.recordBody}>
               {cat.rows.map((row, i) => (
-                <div key={i} className="record-row">
+                <div key={i} className={styles.recordRow}>
                   <span
-                    className="record-rank"
+                    className={styles.recordRank}
                     style={{
                       color:
                         row.rank === 1
@@ -39,27 +41,23 @@ export default function RecordsPage() {
                           ? PODIUM_COLORS[1]
                           : row.rank === 3
                           ? PODIUM_COLORS[2]
-                          : '#444',
+                          : 'var(--text-tertiary)',
                     }}
                     aria-hidden="true"
                   >
                     {row.rank === 1
-                      ? '🥇'
+                      ? '1st'
                       : row.rank === 2
-                      ? '🥈'
+                      ? '2nd'
                       : row.rank === 3
-                      ? '🥉'
+                      ? '3rd'
                       : `#${row.rank}`}
                   </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div className="record-driver-name">{row.name}</div>
-                    <div
-                      style={{ fontSize: 10, color: 'var(--text4)', marginTop: 1 }}
-                    >
-                      {row.note}
-                    </div>
+                  <div className={styles.recordInfo}>
+                    <div className={styles.recordDriverName}>{row.name}</div>
+                    <div className={styles.recordNote}>{row.note}</div>
                   </div>
-                  <span className="record-value">{row.value}</span>
+                  <span className={styles.recordValue}>{row.value}</span>
                 </div>
               ))}
             </div>
@@ -67,17 +65,8 @@ export default function RecordsPage() {
         ))}
       </div>
 
-      <div
-        style={{
-          marginTop: 20,
-          padding: 14,
-          background: 'var(--card-bg)',
-          border: '1px solid var(--border)',
-          borderRadius: 2,
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ fontSize: 11, color: 'var(--text4)' }}>
+      <div className={styles.footer}>
+        <div className={styles.footerText}>
           Records current as of 2026 season start · Active drivers' stats
           marked with +
         </div>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { Brain, Check, X, Trophy, Medal, Award, BookOpen, RotateCcw } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { QUIZ_QUESTIONS } from '../data/quiz';
+import styles from './QuizPage.module.css';
 
 interface AnswerRecord {
   correct: boolean;
@@ -43,131 +45,69 @@ export default function QuizPage() {
   }
 
   const pct = Math.round((score / QUIZ_QUESTIONS.length) * 100);
-  const grade =
+  const gradeLabel =
     pct >= 90
-      ? '🏆 F1 Expert'
+      ? 'F1 Expert'
       : pct >= 70
-      ? '🥈 Solid Fan'
+      ? 'Solid Fan'
       : pct >= 50
-      ? '🥉 Getting There'
-      : '📚 Keep Learning';
+      ? 'Getting There'
+      : 'Keep Learning';
+
+  const GradeIcon =
+    pct >= 90 ? Trophy : pct >= 70 ? Medal : pct >= 50 ? Award : BookOpen;
 
   if (finished) {
     return (
-      <div>
-        <div className="section-header">
+      <div className={styles.page}>
+        <div className={styles.sectionHeader}>
           <SectionHeader
             title="F1"
             accent="Quiz"
             group="Learn the Basics"
-            icon="🧠"
+            icon={Brain}
           />
           <BookmarkButton sectionId="quiz" />
         </div>
 
-        <div
-          className="card"
-          style={{
-            textAlign: 'center',
-            padding: '40px 20px',
-            marginBottom: 24,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 40,
-              marginBottom: 12,
-            }}
-            aria-hidden="true"
-          >
-            {grade.split(' ')[0]}
+        <div className={styles.resultsCard}>
+          <div className={styles.gradeIcon} aria-hidden="true">
+            <GradeIcon size={40} />
           </div>
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 18,
-              fontWeight: 900,
-              color: '#e10600',
-              marginBottom: 8,
-            }}
-          >
-            {grade.split(' ').slice(1).join(' ')}
-          </div>
-          <div
-            style={{
-              fontSize: 32,
-              fontWeight: 700,
-              color: 'var(--text)',
-              marginBottom: 4,
-            }}
-          >
+          <div className={styles.gradeText}>{gradeLabel}</div>
+          <div className={styles.scoreValue}>
             {score} / {QUIZ_QUESTIONS.length}
           </div>
-          <div
-            style={{ fontSize: 14, color: 'var(--text3)', marginBottom: 24 }}
-          >
-            {pct}% correct
-          </div>
-          <button
-            onClick={restart}
-            className="nav-btn active"
-            style={{
-              padding: '10px 28px',
-              fontFamily: 'Orbitron',
-              fontSize: 11,
-              letterSpacing: 2,
-            }}
-          >
+          <div className={styles.scorePct}>{pct}% correct</div>
+          <button onClick={restart} className={styles.primaryBtn}>
+            <RotateCcw size={16} />
             TRY AGAIN
           </button>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              'repeat(auto-fill, minmax(min(100%,280px),1fr))',
-            gap: 10,
-          }}
-        >
+        <div className={styles.reviewGrid}>
           {QUIZ_QUESTIONS.map((question, i) => (
             <div
               key={i}
-              style={{
-                background: 'var(--card-bg)',
-                border: `1px solid ${
-                  answers[i]?.correct
-                    ? 'rgba(0,220,120,0.3)'
-                    : 'rgba(225,6,0,0.3)'
-                }`,
-                borderRadius: 4,
-                padding: 12,
-              }}
+              className={styles.reviewCard}
+              data-correct={answers[i]?.correct}
             >
-              <div
-                style={{
-                  fontSize: 11,
-                  color: answers[i]?.correct ? '#00dc78' : '#e10600',
-                  fontFamily: 'Orbitron',
-                  letterSpacing: 1,
-                  marginBottom: 6,
-                }}
-              >
-                {answers[i]?.correct ? '✓ CORRECT' : '✗ WRONG'}
+              <div className={styles.reviewStatus}>
+                {answers[i]?.correct ? (
+                  <>
+                    <Check size={12} /> CORRECT
+                  </>
+                ) : (
+                  <>
+                    <X size={12} /> WRONG
+                  </>
+                )}
               </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text)',
-                  marginBottom: 6,
-                }}
-              >
-                {question.q}
-              </div>
+              <div className={styles.reviewQuestion}>{question.q}</div>
               {!answers[i]?.correct && (
-                <div style={{ fontSize: 11, color: '#00dc78' }}>
-                  ✓ {question.options[question.answer]}
+                <div className={styles.reviewAnswer}>
+                  <Check size={12} />
+                  {question.options[question.answer]}
                 </div>
               )}
             </div>
@@ -178,42 +118,27 @@ export default function QuizPage() {
   }
 
   return (
-    <div>
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="F1"
           accent="Quiz"
           group="Learn the Basics"
-          icon="🧠"
+          icon={Brain}
         />
         <BookmarkButton sectionId="quiz" />
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 12,
-        }}
-      >
-        <span style={{ fontSize: 12, color: 'var(--text3)' }}>
+      <div className={styles.progressInfo}>
+        <span>
           Question {current + 1} of {QUIZ_QUESTIONS.length}
         </span>
-        <span
-          style={{
-            fontFamily: 'Orbitron',
-            fontSize: 11,
-            color: '#e10600',
-          }}
-        >
-          {score} pts
-        </span>
+        <span className={styles.scorePts}>{score} pts</span>
       </div>
 
-      <div className="quiz-progress" aria-label="Quiz progress">
+      <div className={styles.progressBar} aria-label="Quiz progress">
         <div
-          className="quiz-progress-fill"
+          className={styles.progressFill}
           style={{
             width: `${(current / QUIZ_QUESTIONS.length) * 100}%`,
           }}
@@ -221,55 +146,30 @@ export default function QuizPage() {
         />
       </div>
 
-      <div className="card" style={{ marginBottom: 20, padding: '24px 20px' }}>
-        <div
-          style={{
-            fontFamily: 'Orbitron',
-            fontSize: 9,
-            color: '#e10600',
-            letterSpacing: 2,
-            marginBottom: 12,
-          }}
-        >
+      <div className={styles.questionCard}>
+        <div className={styles.questionLabel}>
           QUESTION {current + 1}
         </div>
-        <div
-          style={{
-            fontSize: 16,
-            fontWeight: 700,
-            color: 'var(--text)',
-            lineHeight: 1.5,
-            marginBottom: 24,
-          }}
-        >
-          {q.q}
-        </div>
+        <div className={styles.questionText}>{q.q}</div>
 
         {q.options.map((opt, i) => (
           <button
             key={i}
             disabled={selected !== null}
             onClick={() => pick(i)}
-            className={`quiz-option${
+            className={[
+              styles.option,
               selected !== null
                 ? i === q.answer
-                  ? ' correct'
+                  ? styles.optionCorrect
                   : i === selected
-                  ? ' wrong'
+                  ? styles.optionWrong
                   : ''
-                : ''
-            }`}
+                : '',
+            ].join(' ')}
             aria-label={opt}
           >
-            <span
-              style={{
-                fontFamily: 'Orbitron',
-                fontSize: 10,
-                minWidth: 20,
-                color: 'inherit',
-              }}
-              aria-hidden="true"
-            >
+            <span className={styles.optionLetter} aria-hidden="true">
               {String.fromCharCode(65 + i)}
             </span>
             {opt}
@@ -277,49 +177,13 @@ export default function QuizPage() {
         ))}
 
         {selected !== null && (
-          <div
-            style={{
-              marginTop: 16,
-              padding: '12px 14px',
-              background: 'rgba(225,6,0,0.04)',
-              border: '1px solid rgba(225,6,0,0.15)',
-              borderRadius: 4,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 11,
-                color: '#e10600',
-                fontFamily: 'Orbitron',
-                letterSpacing: 1,
-                marginBottom: 6,
-              }}
-            >
-              EXPLANATION
-            </div>
-            <p
-              style={{
-                fontSize: 12,
-                color: 'var(--text2)',
-                lineHeight: 1.7,
-              }}
-            >
-              {q.exp}
-            </p>
-            <button
-              onClick={next}
-              className="nav-btn active"
-              style={{
-                marginTop: 12,
-                padding: '8px 20px',
-                fontFamily: 'Orbitron',
-                fontSize: 10,
-                letterSpacing: 2,
-              }}
-            >
+          <div className={styles.explanationBox}>
+            <div className={styles.explanationLabel}>EXPLANATION</div>
+            <p className={styles.explanationText}>{q.exp}</p>
+            <button onClick={next} className={styles.primaryBtn}>
               {current + 1 >= QUIZ_QUESTIONS.length
                 ? 'SEE RESULTS'
-                : 'NEXT →'}
+                : 'NEXT'}
             </button>
           </div>
         )}

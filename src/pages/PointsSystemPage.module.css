@@ -1,0 +1,184 @@
+.page {
+  padding: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.pointsWrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: var(--space-5);
+}
+
+.pointsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.pointsTable thead th {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.pointsTable tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.pointsTable tbody tr:hover {
+  background: var(--bg-surface-hover);
+}
+
+.pointsTable td {
+  padding: 10px 12px;
+}
+
+.posBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+.posBadgeP1 {
+  background: var(--gold);
+  color: var(--text-inverse);
+}
+
+.posBadgeP2 {
+  background: var(--silver);
+  color: var(--text-inverse);
+}
+
+.posBadgeP3 {
+  background: var(--bronze);
+  color: var(--text-inverse);
+}
+
+.pointsValue {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.pointsValue[data-top="true"] {
+  color: var(--accent);
+}
+
+.pointsNote {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.infoCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.infoText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.infoText strong {
+  color: var(--accent);
+}
+
+.sectionTitle {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.02em;
+}
+
+.sectionTitle span {
+  color: var(--accent);
+}
+
+.sectionLine {
+  height: 2px;
+  width: 40px;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-4);
+}
+
+.champTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.champTable thead th {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.champTable tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.champTable tbody tr:hover {
+  background: var(--bg-surface-hover);
+}
+
+.champTable td {
+  padding: 10px 12px;
+}
+
+.champYear {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: var(--text-xs);
+}
+
+.champDriver {
+  font-weight: 600;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.silver {
+  color: var(--silver);
+}
+
+.champTeam {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}

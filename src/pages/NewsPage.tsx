@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Newspaper, AlertCircle } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
-import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
+import { SkeletonCards } from '../components/ui/SkeletonCards';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
 import { fetchNews } from '../utils/api';
 import { timeAgo } from '../utils/format';
 import type { NewsItem } from '../types';
+import styles from './NewsPage.module.css';
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -33,143 +35,65 @@ export default function NewsPage() {
   useAutoRefresh(loadNews, 5 * 60_000);
 
   return (
-    <div className="section-enter">
-      <div className="section-header">
-        <SectionHeader
-          title="F1"
-          accent="News"
-          group="Race & Stats"
-          icon="📰"
-          intro="The latest F1 headlines pulled live from Motorsport.com. Updated automatically."
-        />
-        <BookmarkButton sectionId="news" />
-      </div>
+    <div className={styles.page}>
+      <SectionHeader
+        title="F1"
+        accent="News"
+        group="Race & Stats"
+        icon={Newspaper}
+        intro="The latest F1 headlines pulled live from Motorsport.com. Updated automatically."
+        sectionId="news"
+      />
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          marginBottom: 20,
-        }}
-      >
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '4px 12px',
-            background: 'rgba(0,220,120,0.08)',
-            border: '1px solid rgba(0,220,120,0.25)',
-            borderRadius: 20,
-          }}
-        >
-          <div
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: '#00dc78',
-              boxShadow: '0 0 6px #00dc78',
-              animation: 'pulse 2s infinite',
-            }}
-          />
-          <span
-            style={{
-              fontSize: 10,
-              color: '#00dc78',
-              fontFamily: 'Orbitron',
-              letterSpacing: 1,
-            }}
-          >
-            LIVE · Motorsport.com
-          </span>
+      <div className={styles.liveBar}>
+        <div className={styles.liveBadge}>
+          <div className={styles.liveDot} />
+          <span className={styles.liveText}>LIVE · Motorsport.com</span>
         </div>
       </div>
 
-      {loading && (
-        <div className="news-grid">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="skeleton-card">
-              <div
-                className="skeleton skel"
-                style={{ height: 140, width: '100%', marginBottom: 12, borderRadius: 8 }}
-              />
-              <div
-                className="skeleton skel"
-                style={{ height: 14, width: '60%', marginBottom: 10 }}
-              />
-              <div
-                className="skeleton skel"
-                style={{ height: 10, width: '80%', marginBottom: 7 }}
-              />
-              <div
-                className="skeleton skel"
-                style={{ height: 10, width: '40%' }}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      {loading && <SkeletonCards count={6} hasImage />}
 
       {error && !loading && (
-        <div
-          className="card"
-          style={{
-            borderColor: '#e10600',
-            padding: 28,
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: 32, marginBottom: 10 }}>📡</div>
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 11,
-              color: '#e10600',
-              letterSpacing: 2,
-              marginBottom: 6,
-            }}
-          >
-            CONNECTION ERROR
-          </div>
-          <p style={{ color: 'var(--text3)', fontSize: 13 }}>{error}</p>
+        <div className={styles.errorCard}>
+          <AlertCircle size={32} className={styles.errorIcon} />
+          <div className={styles.errorTitle}>CONNECTION ERROR</div>
+          <p className={styles.errorMessage}>{error}</p>
         </div>
       )}
 
       {!loading && !error && news.length === 0 && (
         <EmptyState
-          icon="📰"
+          icon={Newspaper}
           title="NO NEWS FOUND"
           sub="Could not load articles. Check back later."
         />
       )}
 
       {!loading && !error && news.length > 0 && (
-        <div className="news-grid">
+        <div className={styles.newsGrid}>
           {news.map((item, i) => (
             <a
               key={i}
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="news-card"
-              style={{ textDecoration: 'none' }}
+              className={styles.newsCard}
               aria-label={item.title}
             >
               {item.image && (
                 <img
                   src={item.image}
                   alt=""
-                  className="news-img"
+                  className={styles.newsImg}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
               )}
-              <div className="news-source">Motorsport.com</div>
-              <div className="news-title">{item.title}</div>
-              <div className="news-date">{timeAgo(item.pubDate)}</div>
+              <div className={styles.newsSource}>Motorsport.com</div>
+              <div className={styles.newsTitle}>{item.title}</div>
+              <div className={styles.newsDate}>{timeAgo(item.pubDate)}</div>
             </a>
           ))}
         </div>

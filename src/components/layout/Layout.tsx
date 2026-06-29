@@ -2,29 +2,36 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Hero } from './Hero';
 import { Navbar } from './Navbar';
 import { MobileNav } from './MobileNav';
-import { useTheme } from '../../context/ThemeContext';
+import { Sidebar } from './Sidebar';
+import { RaceCountdown } from './RaceCountdown';
+import { GlobalSearch } from './GlobalSearch';
+import styles from './Layout.module.css';
 
 export function Layout() {
-  const { darkMode } = useTheme();
   const location = useLocation();
   const isHome = location.pathname === '/';
 
   return (
-    <div className={`f1-app${darkMode ? '' : ' light-mode'}`}>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-      <div className="grid-bg" aria-hidden="true" />
-      <div className="orb orb-1" aria-hidden="true" />
-      <div className="orb orb-2" aria-hidden="true" />
-      <div className="orb orb-3" aria-hidden="true" />
+    <>
+      <a href="#main-content" className={styles.skipLink}>
+        Skip to main content
+      </a>
 
-      <div className="content">
-        {isHome && <Hero />}
-        <Navbar />
-        <main id="main-content" className="main">
-          <Outlet />
+      <div className="app-layout">
+        <Sidebar />
+
+        <main className="main-content" id="main-content">
+          {isHome && <Hero />}
+          <RaceCountdown />
+          <div className="content-area">
+            <Outlet />
+          </div>
         </main>
-        <MobileNav />
       </div>
-    </div>
+
+      <Navbar />
+      <MobileNav />
+      <GlobalSearch />
+    </>
   );
 }

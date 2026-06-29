@@ -37,15 +37,13 @@ const BookmarksPage = lazy(() => import('./pages/BookmarksPage'))
 function PageWrapper({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary fallback={
-      <div className="card" style={{ textAlign: 'center', padding: 40, borderLeft: '3px solid #e10600' }}>
-        <div style={{ fontSize: 32, marginBottom: 10 }}>⚠️</div>
-        <div style={{ fontFamily: 'Orbitron', fontSize: 11, color: '#e10600', letterSpacing: 2 }}>SECTION FAILED TO LOAD</div>
-        <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 8 }}>Please refresh the page to try again.</p>
+      <div style={{ textAlign: 'center', padding: 40, borderLeft: '3px solid var(--accent)', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)' }}>
+        <div style={{ fontSize: 32, marginBottom: 10, color: 'var(--accent)' }}>!</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase' }}>SECTION FAILED TO LOAD</div>
+        <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8 }}>Please refresh the page to try again.</p>
       </div>
     }>
-      <div className="section-enter">
-        {children}
-      </div>
+      {children}
     </ErrorBoundary>
   )
 }

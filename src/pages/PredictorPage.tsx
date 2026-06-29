@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Target, Flag, RotateCcw, X, Check, Camera } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { ACTIVE_DRIVERS_2026 } from '../data/drivers';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import type { ActiveDriver } from '../types';
+import styles from './PredictorPage.module.css';
 
 const DRIVER_BY_SHORT: Record<string, ActiveDriver> = Object.fromEntries(
   ACTIVE_DRIVERS_2026.map(d => [d.short.toLowerCase(), d])
@@ -38,7 +40,6 @@ export default function PredictorPage() {
 
   const [picks, setPicks] = useState<(ActiveDriver | null)[]>(initialPicks);
 
-  // Sync picks to URL
   useEffect(() => {
     const params = new URLSearchParams();
     picks.forEach((d, i) => {
@@ -79,15 +80,12 @@ export default function PredictorPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Background
     ctx.fillStyle = '#0a0a12';
     ctx.fillRect(0, 0, 600, 640);
 
-    // Red top bar
     ctx.fillStyle = '#e10600';
     ctx.fillRect(0, 0, 600, 5);
 
-    // Grid lines
     ctx.strokeStyle = 'rgba(225,6,0,0.05)';
     ctx.lineWidth = 1;
     for (let x = 0; x < 600; x += 40) {
@@ -103,18 +101,16 @@ export default function PredictorPage() {
       ctx.stroke();
     }
 
-    // Header
     ctx.fillStyle = '#e10600';
     ctx.font = 'bold 13px monospace';
     ctx.fillText('MY RACE PREDICTION', 24, 42);
     ctx.fillStyle = '#f0f0fa';
     ctx.font = 'bold 22px monospace';
-    ctx.fillText(`${nextRace?.flag || '🏁'} ${nextRace?.name || 'F1 Race'}`, 24, 72);
+    ctx.fillText(`${nextRace?.flag || ''} ${nextRace?.name || 'F1 Race'}`, 24, 72);
     ctx.fillStyle = '#606080';
     ctx.font = '11px monospace';
     ctx.fillText(`Round ${nextRace?.round || '—'} · Built with f1guide.vercel.app`, 24, 92);
 
-    // Divider
     ctx.strokeStyle = 'rgba(225,6,0,0.3)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -122,13 +118,11 @@ export default function PredictorPage() {
     ctx.lineTo(576, 104);
     ctx.stroke();
 
-    // Picks
     picks.forEach((d, i) => {
       const y = 120 + i * 50;
       const posColors = ['#e10600', '#c0c0c0', '#cd7f32'];
       const posColor = posColors[i] || '#404060';
 
-      // Row background
       ctx.fillStyle = 'rgba(255,255,255,0.02)';
       if (ctx.roundRect) {
         ctx.beginPath();
@@ -138,37 +132,31 @@ export default function PredictorPage() {
         ctx.fillRect(20, y - 14, 560, 40);
       }
 
-      // Position
       ctx.fillStyle = posColor;
       ctx.font = 'bold 11px monospace';
       ctx.fillText(`P${i + 1}`, 30, y + 8);
 
-      // Team color strip
       ctx.fillStyle = d?.color || '#e10600';
       ctx.fillRect(60, y - 14, 3, 40);
 
-      // Driver number
       ctx.fillStyle = d?.color || '#e10600';
       ctx.font = 'bold 16px monospace';
       ctx.fillText(d?.short || '---', 72, y + 8);
 
-      // Driver name
       ctx.fillStyle = '#f0f0fa';
       ctx.font = 'bold 13px monospace';
       ctx.fillText(d?.name || '---', 120, y + 8);
 
-      // Team
       ctx.fillStyle = '#606080';
       ctx.font = '10px monospace';
       ctx.fillText(d?.team || '', 400, y + 8);
     });
 
-    // Footer
     ctx.fillStyle = 'rgba(225,6,0,0.4)';
     ctx.fillRect(0, 615, 600, 1);
     ctx.fillStyle = '#404060';
     ctx.font = '10px monospace';
-    ctx.fillText('f1guide.vercel.app · The Complete F1 Beginner\'s Guide', 24, 632);
+    ctx.fillText("f1guide.vercel.app · The Complete F1 Beginner's Guide", 24, 632);
 
     const link = document.createElement('a');
     link.download = `F1_Prediction_${(nextRace?.name || 'Race').replace(/\s/g, '_')}.png`;
@@ -177,207 +165,117 @@ export default function PredictorPage() {
   }, [picks, nextRace]);
 
   return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+    <div className={styles.page}>
+      <div className={styles.headerRow}>
         <SectionHeader
           title="Race"
           accent="Predictor"
           group="Race & Stats"
-          icon="🔮"
+          icon={Target}
           intro="Pick your predicted top 10 finishers in order. Tap a driver to add them — tap a slot to remove. Then share your grid as a shareable image!"
         />
         <BookmarkButton sectionId="predictor" />
       </div>
 
-      <div
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '6px 14px',
-          background: 'rgba(225,6,0,0.08)',
-          border: '1px solid rgba(225,6,0,0.2)',
-          borderRadius: 20,
-          marginBottom: 20,
-        }}
-      >
+      <div className={styles.raceBadge}>
         <span style={{ fontSize: 14 }}>{nextRace.flag}</span>
-        <span style={{ fontFamily: 'Orbitron', fontSize: 11, color: '#e10600', letterSpacing: 1 }}>
+        <span className={styles.raceBadgeText}>
           NEXT RACE: {nextRace.name} · Round {nextRace.round}
         </span>
       </div>
 
       {submitted ? (
         <div>
-          <div
-            className="card"
-            style={{
-              textAlign: 'center',
-              padding: '32px 20px',
-              marginBottom: 20,
-              borderColor: '#00dc78',
-            }}
-          >
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🏁</div>
-            <div
-              style={{
-                fontFamily: 'Orbitron',
-                fontSize: 14,
-                color: '#00dc78',
-                letterSpacing: 2,
-                marginBottom: 8,
-              }}
-            >
-              PREDICTION LOCKED IN!
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--text3)', marginBottom: 16 }}>
+          <div className={styles.successCard}>
+            <Flag size={32} className={styles.successIcon} />
+            <div className={styles.successTitle}>PREDICTION LOCKED IN!</div>
+            <p className={styles.successMessage}>
               Come back after the race to see how you did.
             </p>
-            <button className="share-btn" onClick={downloadShareCard} style={{ margin: '0 auto' }}>
-              📸 DOWNLOAD SHARE CARD
+            <button className={styles.shareBtn} onClick={downloadShareCard}>
+              <Camera size={16} /> DOWNLOAD SHARE CARD
             </button>
           </div>
-          <div style={{ marginBottom: 20 }}>
+          <div className={styles.slotList}>
             {picks.map((d, i) => (
               <div
                 key={i}
-                className="predictor-slot"
-                style={{ borderLeft: `3px solid ${d ? d.color : 'var(--border)'}` }}
+                className={styles.slot}
+                style={{ borderLeftColor: d ? d.color : 'var(--border-subtle)' }}
               >
-                <span className="predictor-slot-num">P{i + 1}</span>
-                <span style={{ fontSize: 12, color: d?.color || 'var(--text3)', fontWeight: 700, fontFamily: 'Orbitron' }}>
+                <span className={styles.slotNum}>P{i + 1}</span>
+                <span className={styles.slotShort} style={{ color: d?.color || 'var(--text-tertiary)' }}>
                   {d?.short || '---'}
                 </span>
-                <span style={{ fontSize: 13, color: 'var(--text)' }}>{d?.name || '---'}</span>
-                <span style={{ fontSize: 10, color: 'var(--text3)', marginLeft: 'auto' }}>{d?.team || ''}</span>
+                <span className={styles.slotName}>{d?.name || '---'}</span>
+                <span className={styles.slotTeam}>{d?.team || ''}</span>
               </div>
             ))}
           </div>
-          <button
-            onClick={reset}
-            style={{
-              padding: '8px 20px',
-              background: 'transparent',
-              border: '1px solid var(--border2)',
-              color: 'var(--text2)',
-              fontFamily: 'Orbitron',
-              fontSize: 10,
-              letterSpacing: 2,
-              cursor: 'pointer',
-              borderRadius: 6,
-            }}
-          >
-            RESET
+          <button className={styles.resetBtn} onClick={reset}>
+            <RotateCcw size={14} /> RESET
           </button>
         </div>
       ) : (
-        <div className="predictor-grid">
+        <div className={styles.predictorGrid}>
           <div>
-            <div
-              style={{
-                fontFamily: 'Orbitron',
-                fontSize: 9,
-                color: '#e10600',
-                letterSpacing: 2,
-                marginBottom: 12,
-              }}
-            >
-              YOUR TOP 10
-            </div>
+            <div className={styles.panelLabel}>YOUR TOP 10</div>
             {picks.map((d, i) => (
               <div
                 key={i}
-                className="predictor-slot"
+                className={styles.slot}
                 style={{
-                  borderLeft: `3px solid ${d ? d.color : 'var(--border)'}`,
+                  borderLeftColor: d ? d.color : 'var(--border-subtle)',
                   cursor: d ? 'pointer' : 'default',
                 }}
                 onClick={() => d && removeSlot(i)}
                 role="button"
                 aria-label={d ? `Remove ${d.name} from position ${i + 1}` : `Empty slot ${i + 1}`}
               >
-                <span className="predictor-slot-num">P{i + 1}</span>
+                <span className={styles.slotNum}>P{i + 1}</span>
                 {d ? (
                   <>
-                    <span
-                      style={{
-                        fontSize: 11,
-                        color: d.color,
-                        fontWeight: 700,
-                        fontFamily: 'Orbitron',
-                      }}
-                    >
+                    <span className={styles.slotShort} style={{ color: d.color }}>
                       {d.short}
                     </span>
-                    <span style={{ fontSize: 12, color: 'var(--text)' }}>{d.name}</span>
-                    <span style={{ fontSize: 10, color: 'var(--text3)', marginLeft: 'auto' }}>✕</span>
+                    <span className={styles.slotName}>{d.name}</span>
+                    <span className={styles.slotRemove}><X size={14} /></span>
                   </>
                 ) : (
-                  <span style={{ fontSize: 11, color: 'var(--text4)' }}>— tap a driver —</span>
+                  <span className={styles.slotEmpty}>— tap a driver —</span>
                 )}
               </div>
             ))}
             {complete && (
               <button
+                className={styles.lockBtn}
                 onClick={() => setSubmitted(true)}
-                style={{
-                  marginTop: 12,
-                  width: '100%',
-                  padding: '12px',
-                  background: 'linear-gradient(135deg, #e10600, #ff4020)',
-                  border: 'none',
-                  color: '#fff',
-                  fontFamily: 'Orbitron',
-                  fontSize: 11,
-                  letterSpacing: 2,
-                  cursor: 'pointer',
-                  borderRadius: 8,
-                  boxShadow: '0 4px 20px rgba(225,6,0,0.3)',
-                }}
                 aria-label="Lock in prediction"
               >
-                LOCK IN PREDICTION 🏁
+                LOCK IN PREDICTION <Flag size={14} />
               </button>
             )}
           </div>
           <div>
-            <div
-              style={{
-                fontFamily: 'Orbitron',
-                fontSize: 9,
-                color: '#e10600',
-                letterSpacing: 2,
-                marginBottom: 12,
-              }}
-            >
-              SELECT DRIVERS
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 4,
-                maxHeight: 440,
-                overflowY: 'auto',
-              }}
-            >
+            <div className={styles.panelLabel}>SELECT DRIVERS</div>
+            <div className={styles.driverList}>
               {ACTIVE_DRIVERS_2026.map(d => {
                 const isSelected = selectedIds.includes(d.name);
                 return (
                   <button
                     key={d.name}
-                    className={`predictor-driver-btn${isSelected ? ' selected' : ''}`}
+                    className={`${styles.driverBtn} ${isSelected ? styles.driverBtnSelected : ''}`}
                     onClick={() => pick(d)}
                     disabled={isSelected}
-                    style={{ borderLeft: `3px solid ${d.color}` }}
+                    style={{ borderLeftColor: d.color }}
                     aria-label={isSelected ? `${d.name} already selected` : `Add ${d.name} to prediction`}
                   >
-                    <span style={{ fontFamily: 'Orbitron', fontSize: 10, color: d.color, minWidth: 28 }}>
+                    <span className={styles.driverShort} style={{ color: d.color }}>
                       {d.short}
                     </span>
-                    <span style={{ flex: 1 }}>{d.name}</span>
-                    <span style={{ fontSize: 10, color: 'var(--text3)' }}>{d.team}</span>
-                    {isSelected && <span style={{ fontSize: 10, color: '#00dc78' }}>✓</span>}
+                    <span className={styles.driverName}>{d.name}</span>
+                    <span className={styles.driverTeam}>{d.team}</span>
+                    {isSelected && <Check size={14} className={styles.checkIcon} />}
                   </button>
                 );
               })}

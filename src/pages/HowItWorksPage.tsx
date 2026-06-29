@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
+import { HelpCircle } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import { pad } from '../utils/format';
+import styles from './HowItWorksPage.module.css';
 
 const HOW_CARDS = [
   { title: 'What is F1?', text: 'Formula 1 is the pinnacle of motorsport — the fastest, most technologically advanced racing series on Earth. 11 teams, 22 drivers, 22 races in 2026 across the globe. Each team builds their own car around a common set of rules.' },
@@ -59,31 +61,31 @@ function FeaturedRaceCard() {
   });
 
   return (
-    <div className="featured-race-card">
-      <div className="featured-race-flag" aria-hidden="true">
+    <div className={styles.featuredCard}>
+      <div className={styles.featuredFlag} aria-hidden="true">
         {nextRace.flag}
       </div>
-      <div className="featured-race-info">
-        <div className="featured-race-label">
+      <div className={styles.featuredInfo}>
+        <div className={styles.featuredLabel}>
           Round {nextRace.round} · Next Race
         </div>
-        <div className="featured-race-name">{nextRace.name}</div>
-        <div className="featured-race-sub">
+        <div className={styles.featuredName}>{nextRace.name}</div>
+        <div className={styles.featuredSub}>
           {nextRace.circuit} · {raceDate}
         </div>
       </div>
-      <div className="featured-race-countdown" aria-label="Race countdown">
+      <div className={styles.featuredCountdown} aria-label="Race countdown">
         {[
           ['d', 'Days'],
           ['h', 'Hrs'],
           ['m', 'Min'],
           ['s', 'Sec'],
         ].map(([k, l]) => (
-          <div key={k} className="featured-tile">
-            <div className="featured-tile-num">
+          <div key={k} className={styles.featuredTile}>
+            <div className={styles.featuredTileNum}>
               {pad(timeLeft[k as keyof TimeLeft])}
             </div>
-            <div className="featured-tile-label">{l}</div>
+            <div className={styles.featuredTileLabel}>{l}</div>
           </div>
         ))}
       </div>
@@ -93,13 +95,13 @@ function FeaturedRaceCard() {
 
 export default function HowItWorksPage() {
   return (
-    <div>
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="How"
           accent="F1 Works"
           group="Learn the Basics"
-          icon="🏁"
+          icon={HelpCircle}
           intro="New to Formula 1? Start here. This covers everything that happens across a race weekend — from practice to the podium — plus the rules, tyres, and tactics that make every race unpredictable."
         />
         <BookmarkButton sectionId="how" />
@@ -107,9 +109,9 @@ export default function HowItWorksPage() {
 
       <FeaturedRaceCard />
 
-      <div className="how-grid">
+      <div className={styles.howGrid}>
         {HOW_CARDS.map((item) => (
-          <div className="how-card" key={item.title}>
+          <div className={styles.howCard} key={item.title}>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
           </div>

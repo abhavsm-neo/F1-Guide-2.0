@@ -1,0 +1,93 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.chartSvg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.gridPolygon {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.axisLine {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.dataArea {
+  opacity: 0.15;
+  transition: opacity 0.2s ease;
+}
+
+.dataArea:hover {
+  opacity: 0.25;
+}
+
+.dataPoint {
+  cursor: pointer;
+  transition: r 0.2s ease;
+}
+
+.dataPoint:hover {
+  r: 6;
+}
+
+.axisLabel {
+  fill: var(--text-secondary);
+  font-size: 11px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.tooltip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  z-index: 100;
+  animation: fadeIn 0.15s ease-out both;
+  text-align: center;
+  min-width: 80px;
+}
+
+.tooltipLabel {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.tooltipValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) translateY(0);
+  }
+}

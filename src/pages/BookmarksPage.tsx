@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { Bookmark, X, Star, FileText } from 'lucide-react';
 import { useBookmarks } from '../context/BookmarksContext';
 import { NAV_GROUPS } from '../data/nav';
+import { SectionHeader } from '../components/ui/SectionHeader';
+import styles from './BookmarksPage.module.css';
 
 interface BookmarkSection {
   id: string;
@@ -17,48 +20,33 @@ export default function BookmarksPage() {
   );
 
   return (
-    <div>
-      <div className="section-header">
-        <div className="section-title">
-          My <span>Bookmarks</span>
-        </div>
-        <div className="section-line" />
+    <div className={styles.page}>
+      <div className={styles.sectionHeader}>
+        <SectionHeader
+          title="My"
+          accent="Bookmarks"
+          group="Library"
+          icon={Bookmark}
+        />
       </div>
 
       {bookmarks.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: '48px 20px' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }} aria-hidden="true">
-            🔖
-          </div>
-          <div
-            style={{
-              fontFamily: 'Orbitron',
-              fontSize: 12,
-              color: 'var(--text3)',
-              letterSpacing: 2,
-            }}
-          >
-            NO BOOKMARKS YET
-          </div>
-          <p
-            style={{
-              fontSize: 12,
-              color: 'var(--text4)',
-              marginTop: 8,
-            }}
-          >
-            Click the ☆ button on any section header to save it here.
+        <div className={styles.emptyCard}>
+          <Bookmark size={48} className={styles.emptyIcon} aria-hidden="true" />
+          <div className={styles.emptyTitle}>NO BOOKMARKS YET</div>
+          <p className={styles.emptySub}>
+            Click the star button on any section header to save it here.
           </p>
         </div>
       ) : (
-        <div className="bookmarks-grid">
+        <div className={styles.bookmarksGrid}>
           {bookmarks.map((id) => {
             const s = allSections.find((sec) => sec.id === id);
             if (!s) return null;
             return (
               <div
                 key={id}
-                className="bookmark-card"
+                className={styles.bookmarkCard}
                 onClick={() => navigate(`/${id}`)}
                 role="button"
                 tabIndex={0}
@@ -70,30 +58,17 @@ export default function BookmarksPage() {
                 }}
                 aria-label={s.label}
               >
-                <span style={{ fontSize: 20 }} aria-hidden="true">
-                  {s.icon}
-                </span>
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: 'var(--text)',
-                    }}
-                  >
-                    {s.label}
-                  </div>
-                </div>
+                <FileText size={20} aria-hidden="true" />
+                <div className={styles.bookmarkLabel}>{s.label}</div>
                 <button
-                  className="bookmark-btn"
+                  className={styles.removeBtn}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleBookmark(id);
                   }}
-                  style={{ color: '#e10600', fontSize: 14 }}
                   aria-label={`Remove ${s.label} bookmark`}
                 >
-                  ✕
+                  <X size={16} />
                 </button>
               </div>
             );
@@ -101,25 +76,15 @@ export default function BookmarksPage() {
         </div>
       )}
 
-      <div style={{ marginTop: 28 }}>
-        <div
-          style={{
-            fontFamily: 'Orbitron',
-            fontSize: 10,
-            color: '#e10600',
-            letterSpacing: 2,
-            marginBottom: 14,
-          }}
-        >
-          ALL SECTIONS
-        </div>
-        <div className="bookmarks-grid">
+      <div className={styles.allSections}>
+        <div className={styles.allSectionsTitle}>ALL SECTIONS</div>
+        <div className={styles.bookmarksGrid}>
           {allSections.map((s) => {
             const bookmarked = isBookmarked(s.id);
             return (
               <div
                 key={s.id}
-                className="bookmark-card"
+                className={styles.bookmarkCard}
                 onClick={() => navigate(`/${s.id}`)}
                 role="button"
                 tabIndex={0}
@@ -131,36 +96,23 @@ export default function BookmarksPage() {
                 }}
                 aria-label={s.label}
               >
-                <span style={{ fontSize: 20 }} aria-hidden="true">
-                  {s.icon}
-                </span>
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: 'var(--text)',
-                    }}
-                  >
-                    {s.label}
-                  </div>
-                </div>
+                <FileText size={20} aria-hidden="true" />
+                <div className={styles.bookmarkLabel}>{s.label}</div>
                 <button
-                  className="bookmark-btn"
+                  className={styles.starBtn}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleBookmark(s.id);
-                  }}
-                  style={{
-                    color: bookmarked ? '#FFD700' : 'var(--text4)',
-                    cursor: 'pointer',
                   }}
                   aria-label={
                     bookmarked ? `Remove ${s.label} bookmark` : `Bookmark ${s.label}`
                   }
                   aria-pressed={bookmarked}
                 >
-                  {bookmarked ? '★' : '☆'}
+                  <Star
+                    size={16}
+                    fill={bookmarked ? 'currentColor' : 'none'}
+                  />
                 </button>
               </div>
             );

@@ -1,3 +1,5 @@
+import styles from './RatingBar.module.css';
+
 interface RatingBarProps {
   label: string;
   value: number;
@@ -5,15 +7,20 @@ interface RatingBarProps {
 
 export function RatingBar({ label, value }: RatingBarProps) {
   return (
-    <div className="rating-bar-wrap">
-      <div className="rating-label">
-        <span>{label}</span>
-        <span style={{ color: '#e10600' }}>{value}/100</span>
+    <div className={styles.row}>
+      <div className={styles.header}>
+        <span className={styles.label}>{label}</span>
+        <span className={styles.score}>{value}/100</span>
       </div>
-      <div className="rating-bar">
+      <div className={styles.bar}>
         <div
-          className="rating-fill"
-          style={{ '--bar-w': `${value}%`, width: `${value}%` } as React.CSSProperties}
+          className={styles.fill}
+          style={
+            {
+              '--bar-width': `${value}%`,
+              width: `${value}%`,
+            } as React.CSSProperties
+          }
         />
       </div>
     </div>

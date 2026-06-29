@@ -1,32 +1,34 @@
 import { useState } from 'react';
+import { Swords } from 'lucide-react';
 import { H2H_DATA_2024 } from '../data/h2h';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
+import styles from './HeadToHeadPage.module.css';
 
 export default function HeadToHeadPage() {
   const [metric, setMetric] = useState<'quali' | 'race'>('quali');
 
   return (
-    <div className="section-enter">
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.headerRow}>
         <SectionHeader
           title="Teammate"
           accent="H2H"
           group="Stats"
-          icon="⚔️"
+          icon={Swords}
           intro="Your teammate is your most controlled benchmark in F1 — same car, same conditions. These are the 2024 qualifying and race head-to-head records across all teams. 2025 & 2026 data will be added as the seasons complete."
         />
         <BookmarkButton sectionId="head-to-head" />
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      <div className={styles.filterBar}>
         {[
           ['quali', 'Qualifying'] as const,
           ['race', 'Race Results'] as const,
         ].map(([k, l]) => (
           <button
             key={k}
-            className={`year-btn${metric === k ? ' active' : ''}`}
+            className={`${styles.filterBtn} ${metric === k ? styles.filterBtnActive : ''}`}
             onClick={() => setMetric(k)}
             aria-pressed={metric === k}
           >
@@ -46,33 +48,15 @@ export default function HeadToHeadPage() {
         return (
           <div
             key={i}
-            className="h2h-card"
-            style={{ borderTop: `2px solid ${row.color}` }}
+            className={styles.h2hCard}
+            style={{ borderTopColor: row.color }}
           >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 8,
-                flexWrap: 'wrap',
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'Orbitron, sans-serif',
-                  fontSize: 10,
-                  color: row.color,
-                  letterSpacing: 1,
-                  textShadow: `0 0 8px ${row.color}60`,
-                  textTransform: 'uppercase',
-                }}
-              >
+            <div className={styles.h2hHeader}>
+              <div className={styles.teamLabel} style={{ color: row.color }}>
                 {row.team}
               </div>
               {winner && (
-                <div style={{ fontSize: 10, color: 'var(--text3)' }}>
+                <div className={styles.winnerText}>
                   <span style={{ color: row.color, fontWeight: 700 }}>
                     {winner}
                   </span>{' '}
@@ -82,66 +66,37 @@ export default function HeadToHeadPage() {
                 </div>
               )}
             </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 4,
-                marginBottom: 6,
-              }}
-            >
+            <div className={styles.driverRow}>
               {[
                 { name: row.d1, count: d1Count, pct: p1 },
                 { name: row.d2, count: d2Count, pct: p2 },
               ].map((driver, di) => (
                 <div
                   key={di}
+                  className={styles.driverCell}
                   style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: di === 0 ? row.color : 'var(--text2)',
+                    color: di === 0 ? row.color : 'var(--text-secondary)',
                     textAlign: di === 0 ? 'left' : 'right',
                   }}
                 >
                   {driver.name}{' '}
-                  <span
-                    style={{
-                      fontFamily: 'Orbitron, sans-serif',
-                      fontSize: 16,
-                      color: 'var(--text)',
-                    }}
-                  >
-                    {driver.count}
-                  </span>
+                  <span className={styles.driverCount}>{driver.count}</span>
                 </div>
               ))}
             </div>
-            <div className="h2h-bar-wrap">
+            <div className={styles.barTrack}>
               <div
-                className="h2h-bar-left"
-                style={{
-                  width: `${p1}%`,
-                  background: row.color,
-                  boxShadow: `0 0 6px ${row.color}80`,
-                }}
+                className={styles.barLeft}
+                style={{ width: `${p1}%`, background: row.color }}
                 aria-label={`${row.d1}: ${p1}%`}
               />
               <div
-                className="h2h-bar-right"
-                style={{ width: `${p2}%`, background: 'var(--border2)' }}
+                className={styles.barRight}
+                style={{ width: `${p2}%`, background: 'var(--border-subtle)' }}
                 aria-label={`${row.d2}: ${p2}%`}
               />
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: 'var(--text4)',
-                marginTop: 6,
-                fontStyle: 'italic',
-              }}
-            >
-              {row.note}
-            </div>
+            <div className={styles.note}>{row.note}</div>
           </div>
         );
       })}

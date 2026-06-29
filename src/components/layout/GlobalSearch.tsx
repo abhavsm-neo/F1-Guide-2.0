@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search, X, User, BookOpen, MapPin, FileText, Settings, HelpCircle } from 'lucide-react';
 import { SEARCH_INDEX } from '../../data/nav';
 import type { SearchResult } from '../../types';
+import styles from './GlobalSearch.module.css';
 
 const TYPE_COLORS: Record<string, string> = {
   Driver: '#e10600',
@@ -12,10 +14,19 @@ const TYPE_COLORS: Record<string, string> = {
   Rule: '#FFD700',
 };
 
+const TYPE_ICONS: Record<string, React.ElementType> = {
+  Driver: User,
+  Term: BookOpen,
+  Circuit: MapPin,
+  Section: FileText,
+  Team: Settings,
+  Rule: HelpCircle,
+};
+
 export function GlobalSearch() {
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,13 +55,34 @@ export function GlobalSearch() {
     function handleKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        inputRef.current?.focus();
         setOpen(true);
+        inputRef.current?.focus();
       }
     }
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, []);
+
+  useEffect(() => {
+    function handle() {
+      setOpen(true);
+      inputRef.current?.focus();
+    }
+    window.addEventListener('open-search', handle);
+    return () => window.removeEventListener('open-search', handle);
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      inputRef.current?.focus();
+    } else {
+      document.body.style.overflow = '';
+      setQuery('');
+      setFocused(-1);
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
 
   function handleKey(e: React.KeyboardEvent) {
     if (!open) return;
@@ -69,7 +101,7 @@ export function GlobalSearch() {
     return (
       <>
         {text.slice(0, idx)}
-        <mark style={{ background: 'rgba(225,6,0,0.25)', color: 'var(--text)', borderRadius: 2, padding: '0 1px' }}>
+        <mark className={styles.highlight}>
           {text.slice(idx, idx + q.length)}
         </mark>
         {text.slice(idx + q.length)}
@@ -77,118 +109,119 @@ export function GlobalSearch() {
     );
   }
 
-  return (
-    <div ref={ref} style={{ position: 'relative', width: '100%', maxWidth: 480 }}>
-      <div
-        style={{
-          display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px',
-          background: 'var(--card-bg)', border: `1px solid ${open ? 'rgba(225,6,0,0.4)' : 'var(--glass-border)'}`,
-          borderRadius: 10, transition: 'border-color 0.2s, box-shadow 0.2s',
-          boxShadow: open ? '0 0 0 3px rgba(225,6,0,0.08)' : 'var(--shadow)',
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <span style={{ fontSize: 14, color: 'var(--text3)', flexShrink: 0 }} aria-hidden="true">🔍</span>
-        <input
-          ref={inputRef}
-          value={query}
-          onChange={e => { setQuery(e.target.value); setOpen(true); setFocused(-1); }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={handleKey}
-          placeholder="Search drivers, circuits, features..."
-          aria-label="Search"
-          aria-autocomplete="list"
-          aria-controls={open ? 'search-results' : undefined}
-          aria-activedescendant={focused >= 0 ? `search-result-${focused}` : undefined}
-          style={{ flex: 1, background: 'none', border: 'none', outline: 'none', color: 'var(--text)', fontSize: 13, fontFamily: 'Exo 2, sans-serif' }}
-        />
-        {query && (
-          <button
-            onClick={() => { setQuery(''); setOpen(false); inputRef.current?.focus(); }}
-            aria-label="Clear search"
-            style={{ background: 'none', border: 'none', color: 'var(--text4)', cursor: 'pointer', fontSize: 13, lineHeight: 1, padding: '2px 4px', borderRadius: 4 }}
-          >
-            ✕
-          </button>
-        )}
-        {!query && <span style={{ fontSize: 10, color: 'var(--text4)', fontFamily: 'Orbitron', letterSpacing: 1, flexShrink: 0 }}>⌘K</span>}
-      </div>
+  const goToResult = (section: string) => {
+    navigate(`/${section}`);
+    setQuery('');
+    setOpen(false);
+    setFocused(-1);
+  };
 
-      {open && query.length > 1 && (
-        <div
-          id="search-results"
-          role="listbox"
-          style={{
-            position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
-            background: 'rgba(10,10,20,0.95)', backdropFilter: 'blur(24px)',
-            border: '1px solid var(--glass-border)', borderTop: '2px solid #e10600',
-            borderRadius: '0 0 12px 12px', zIndex: 500,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-            overflow: 'hidden',
-          }}
-        >
-          {results.length > 0 ? (
-            <>
-              {results.map((r, i) => (
-                <button
-                  key={i}
-                  id={`search-result-${i}`}
-                  role="option"
-                  aria-selected={focused === i}
-                  onClick={() => { navigate(`/${r.section}`); setQuery(''); setOpen(false); setFocused(-1); }}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 12, width: '100%',
-                    padding: '11px 16px', background: focused === i ? 'rgba(225,6,0,0.08)' : 'none',
-                    border: 'none', borderBottom: '1px solid var(--border)', cursor: 'pointer',
-                    textAlign: 'left', transition: 'background 0.1s',
-                  }}
-                  onMouseEnter={() => setFocused(i)}
-                  onMouseLeave={() => setFocused(-1)}
-                >
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-                    background: `${r.color || '#e10600'}18`,
-                    border: `1px solid ${r.color || '#e10600'}33`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 16,
-                  }} aria-hidden="true">
-                    {r.extra || r.icon}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>
-                      {highlight(r.title, query)}
-                    </div>
-                    <div style={{ fontSize: 10, color: 'var(--text3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {r.sub}
-                    </div>
-                  </div>
-                  <div style={{
-                    fontSize: 8, fontFamily: 'Orbitron', letterSpacing: 1,
-                    padding: '2px 7px', borderRadius: 20, flexShrink: 0,
-                    background: `${TYPE_COLORS[r.type] || '#606080'}18`,
-                    color: TYPE_COLORS[r.type] || '#606080',
-                    border: `1px solid ${TYPE_COLORS[r.type] || '#606080'}33`,
-                    textTransform: 'uppercase',
-                  }}>
-                    {r.type}
-                  </div>
-                </button>
-              ))}
-              <div style={{ padding: '8px 16px', fontSize: 10, color: 'var(--text4)', fontFamily: 'Orbitron', letterSpacing: 1 }}>
-                {results.length} RESULT{results.length !== 1 ? 'S' : ''} · ↑↓ NAVIGATE · ↵ SELECT
-              </div>
-            </>
-          ) : (
-            <div style={{ padding: '24px 16px', textAlign: 'center' }}>
-              <div style={{ fontSize: 24, marginBottom: 8 }} aria-hidden="true">🔎</div>
-              <div style={{ fontFamily: 'Orbitron', fontSize: 10, color: 'var(--text3)', letterSpacing: 2 }}>
-                NO RESULTS FOR "{query.toUpperCase()}"
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--text4)', marginTop: 4 }}>Try a driver name, circuit, or F1 term</div>
-            </div>
-          )}
-        </div>
+  return (
+    <>
+      {open && (
+        <div className={styles.overlay} onClick={() => setOpen(false)} aria-hidden="true" />
       )}
-    </div>
+      <div
+        ref={ref}
+        className={`${styles.modal}${open ? ` ${styles.open}` : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search"
+      >
+        <div className={styles.inputWrap}>
+          <Search size={18} strokeWidth={2} aria-hidden="true" className={styles.inputIcon} />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={e => { setQuery(e.target.value); setFocused(-1); }}
+            onKeyDown={handleKey}
+            placeholder="Search drivers, circuits, features..."
+            aria-label="Search"
+            aria-autocomplete="list"
+            aria-controls={open ? 'search-results' : undefined}
+            aria-activedescendant={focused >= 0 ? `search-result-${focused}` : undefined}
+            className={styles.input}
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => { setQuery(''); inputRef.current?.focus(); }}
+              aria-label="Clear search"
+              className={styles.clearBtn}
+            >
+              <X size={16} strokeWidth={2} />
+            </button>
+          )}
+          {!query && <kbd className={styles.kbd}>⌘K</kbd>}
+        </div>
+
+        {open && query.length > 1 && (
+          <div
+            id="search-results"
+            role="listbox"
+            className={styles.results}
+          >
+            {results.length > 0 ? (
+              <>
+                {results.map((r, i) => {
+                  const Icon = TYPE_ICONS[r.type] || HelpCircle;
+                  return (
+                    <button
+                      type="button"
+                      key={i}
+                      id={`search-result-${i}`}
+                      role="option"
+                      aria-selected={focused === i}
+                      onClick={() => goToResult(r.section)}
+                      className={`${styles.result}${focused === i ? ` ${styles.resultFocused}` : ''}`}
+                      onMouseEnter={() => setFocused(i)}
+                      onMouseLeave={() => setFocused(-1)}
+                    >
+                      <div
+                        className={styles.resultIcon}
+                        style={{
+                          background: `${r.color || '#e10600'}18`,
+                          borderColor: `${r.color || '#e10600'}33`,
+                        }}
+                        aria-hidden="true"
+                      >
+                        <Icon size={18} strokeWidth={2} style={{ color: r.color || '#e10600' }} />
+                      </div>
+                      <div className={styles.resultBody}>
+                        <div className={styles.resultTitle}>
+                          {highlight(r.title, query)}
+                        </div>
+                        <div className={styles.resultSub}>
+                          {r.sub}
+                        </div>
+                      </div>
+                      <div
+                        className={styles.resultBadge}
+                        style={{
+                          background: `${TYPE_COLORS[r.type] || '#606080'}18`,
+                          color: TYPE_COLORS[r.type] || '#606080',
+                          borderColor: `${TYPE_COLORS[r.type] || '#606080'}33`,
+                        }}
+                      >
+                        {r.type}
+                      </div>
+                    </button>
+                  );
+                })}
+                <div className={styles.footer}>
+                  {results.length} RESULT{results.length !== 1 ? 'S' : ''} · ↑↓ NAVIGATE · ↵ SELECT
+                </div>
+              </>
+            ) : (
+              <div className={styles.empty}>
+                <Search size={24} strokeWidth={2} aria-hidden="true" className={styles.emptyIcon} />
+                <div className={styles.emptyTitle}>No results for "{query}"</div>
+                <div className={styles.emptyHint}>Try a driver name, circuit, or F1 term</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </>
   );
 }

@@ -1,16 +1,18 @@
+import { TrendingUp } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { ChampionshipTracker } from '../components/charts/ChampionshipTracker';
+import styles from './ChampionshipTrackerPage.module.css';
 
 export default function ChampionshipTrackerPage() {
   return (
-    <div className="section-enter">
-      <div className="section-header">
+    <div className={styles.page}>
+      <div className={styles.headerRow}>
         <SectionHeader
           title="Championship"
           accent="Tracker"
           group="Race & Stats"
-          icon="📈"
+          icon={TrendingUp}
           intro="See how the World Drivers' Championship unfolded round by round. Select a season to relive the battle."
         />
         <BookmarkButton sectionId="championship-tracker" />
