@@ -57,11 +57,12 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   cursor: pointer;
-  border-radius: var(--radius-full);
   transition: border-color 0.2s, color 0.2s;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .refreshBtn:hover:not(:disabled) {
@@ -98,10 +99,34 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--accent);
-  border-radius: var(--radius-md);
   padding: var(--space-5);
   text-align: center;
+  position: relative;
 }
+
+.errorCard::before,
+.errorCard::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 2px solid var(--border-glow-dim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+}
+.errorCard::before {
+  top: -1px; left: -1px;
+  border-right: none; border-bottom: none;
+}
+.errorCard::after {
+  bottom: -1px; right: -1px;
+  border-left: none; border-top: none;
+}
+.errorCard:hover::before,
+.errorCard:hover::after {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
 
 .errorIcon {
   color: var(--accent);
@@ -132,12 +157,17 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   cursor: pointer;
-  border-radius: var(--radius-full);
   transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .retryBtn:hover {
   background: var(--accent-hover);
+  box-shadow: 0 0 16px var(--accent-glow);
 }
 
 .grid {
@@ -147,6 +177,7 @@
 }
 
 .sectionTitle {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 700;
   color: var(--text-primary);
@@ -167,14 +198,38 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--border-subtle);
-  border-radius: var(--radius-md);
   padding: 12px 16px;
   transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
 }
 
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 2px solid var(--border-glow-dim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+}
+.card::before {
+  top: -1px; left: -1px;
+  border-right: none; border-bottom: none;
+}
+.card::after {
+  bottom: -1px; right: -1px;
+  border-left: none; border-top: none;
+}
+.card:hover::before,
+.card:hover::after {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+
 .card:hover {
-  border-color: var(--border-active);
-  box-shadow: var(--shadow-md);
+  border-color: var(--border-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .cardHeader {
@@ -247,6 +302,7 @@
   color: var(--text-secondary);
   min-width: 48px;
   text-align: right;
+  text-shadow: 0 0 8px rgba(0,204,255,0.3);
 }
 
 .topPoints {
@@ -271,4 +327,121 @@
   color: var(--text-tertiary);
   text-align: center;
   margin-top: var(--space-4);
+}
+
+
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+  padding: var(--space-4);
+}
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 2px solid var(--border-glow-dim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+}
+.panel::before {
+  top: -1px; left: -1px;
+  border-right: none; border-bottom: none;
+}
+.panel::after {
+  bottom: -1px; right: -1px;
+  border-left: none; border-top: none;
+}
+.panel:hover::before,
+.panel:hover::after {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.sectionHeader {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-4);
+}
+.sectionAccent {
+  width: 3px; height: 20px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+.sectionLabel {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-secondary);
+}
+.readout {
+  font-family: var(--font-mono); font-weight: 600;
+  color: var(--text-primary); letter-spacing: 0.02em;
+}
+.readoutAccent {
+  color: var(--accent); text-shadow: 0 0 8px var(--accent-glow);
+}
+.readoutCyan {
+  color: var(--hud-cyan); text-shadow: 0 0 8px rgba(0,204,255,0.3);
+}
+.actionBtn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: 8px 16px; background: var(--bg-elevated);
+  border: 1px solid var(--border-active); color: var(--text-primary);
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.actionBtn:hover {
+  border-color: var(--border-glow); box-shadow: 0 0 12px var(--accent-glow);
+}
+.dataGrid {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.dataGrid thead {
+  border-bottom: 2px solid var(--border-active);
+}
+.dataGrid th {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-secondary);
+  padding: var(--space-2) var(--space-3); text-align: left;
+}
+.dataGrid td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono); color: var(--text-primary);
+}
+.dataGrid tbody tr:hover {
+  background: var(--bg-surface-hover);
+}
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; background: var(--bg-elevated);
+  border: 1px solid var(--border-active);
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  font-weight: 600; color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+.tagActive {
+  border-color: var(--accent); color: var(--accent);
+  background: var(--accent-muted); box-shadow: 0 0 6px var(--accent-glow);
+}
+.indicator {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--text-tertiary);
+}
+.indicatorLive {
+  background: var(--hud-green); box-shadow: 0 0 8px var(--hud-green);
+  animation: pulse 2s infinite;
+}
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-active), transparent);
+  margin: var(--space-4) 0;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

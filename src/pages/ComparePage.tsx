@@ -21,7 +21,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 export default function ComparePage() {
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="2025 vs"
           accent="2026 Cars"

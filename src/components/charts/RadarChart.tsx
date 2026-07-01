@@ -119,9 +119,9 @@ export function RadarChart({ data, color, comparisonData, comparisonColor }: Rad
         {/* Data stroke line */}
         <polygon
           points={polygonPoints}
+          className={styles.dataLine}
           fill="none"
           stroke={fillColor}
-          strokeWidth="2"
           strokeLinejoin="round"
         />
 
@@ -145,9 +145,9 @@ export function RadarChart({ data, color, comparisonData, comparisonColor }: Rad
                   return `${pt.x},${pt.y}`;
                 })
                 .join(' ')}
+              className={styles.comparisonLine}
               fill="none"
               stroke={comparisonColor || 'var(--accent)'}
-              strokeWidth="2"
               strokeLinejoin="round"
             />
             {comparisonData.map((d, i) => {

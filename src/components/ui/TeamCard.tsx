@@ -19,7 +19,10 @@ export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
       {/* Top team color strip */}
       <div
         className={styles.colorStrip}
-        style={{ backgroundColor: team.color }}
+        style={{
+          backgroundColor: team.color,
+          boxShadow: `0 0 10px ${team.color}80`,
+        }}
       />
 
       {/* Header */}

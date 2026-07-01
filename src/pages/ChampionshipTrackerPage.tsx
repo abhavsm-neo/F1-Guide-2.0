@@ -7,7 +7,7 @@ import styles from './ChampionshipTrackerPage.module.css';
 export default function ChampionshipTrackerPage() {
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="Championship"
           accent="Tracker"

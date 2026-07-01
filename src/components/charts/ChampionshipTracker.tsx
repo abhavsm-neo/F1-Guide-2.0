@@ -187,6 +187,7 @@ export function ChampionshipTracker() {
               <g key={d.short}>
                 <path
                   d={pathD}
+                  className={styles.lineStroke}
                   fill="none"
                   stroke={d.color}
                   strokeWidth="2.5"

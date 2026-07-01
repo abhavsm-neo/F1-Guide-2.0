@@ -22,6 +22,12 @@ export function SectionHeader({ title, accent, group, intro, icon: Icon, section
         <span className={styles.breadcrumbCurrent}>{group}</span>
       </nav>
 
+      {/* Header bar */}
+      <div className={styles.headerBar}>
+        <div className={styles.headerAccent} aria-hidden="true" />
+        <span className={styles.headerLabel}>{group}</span>
+      </div>
+
       {/* Heading row */}
       <div className={styles.headingRow}>
         <h2 className={styles.title}>

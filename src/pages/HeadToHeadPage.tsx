@@ -10,7 +10,7 @@ export default function HeadToHeadPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="Teammate"
           accent="H2H"

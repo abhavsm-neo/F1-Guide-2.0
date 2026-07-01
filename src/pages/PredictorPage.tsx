@@ -166,7 +166,7 @@ export default function PredictorPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="Race"
           accent="Predictor"

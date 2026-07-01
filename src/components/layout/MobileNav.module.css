@@ -5,7 +5,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 300;
   opacity: 0;
   pointer-events: none;
@@ -24,13 +24,41 @@
   bottom: 0;
   z-index: 400;
   background: var(--bg-elevated);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-radius: 0;
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
   max-height: 85vh;
   display: flex;
   flex-direction: column;
   transform: translateY(100%);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Corner brackets on sheet */
+.sheet::before,
+.sheet::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-glow-dim);
+  pointer-events: none;
+  z-index: 10;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sheet::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.sheet::after {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
 }
 
 .sheetOpen {
@@ -41,7 +69,7 @@
   width: 36px;
   height: 4px;
   background: var(--border-subtle);
-  border-radius: 2px;
+  border-radius: 0;
   margin: 12px auto 0;
 }
 
@@ -62,7 +90,7 @@
   padding: 8px 12px;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   color: var(--text-secondary);
 }
 
@@ -86,18 +114,20 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: transparent;
-  border: none;
+  border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
 .closeBtn:hover {
   background: var(--bg-surface-hover);
   color: var(--text-primary);
+  border-color: var(--border-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .closeBtn:focus-visible {
@@ -118,10 +148,11 @@
   font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--text-secondary);
   margin-bottom: 6px;
   padding-left: 2px;
+  font-family: var(--font-mono);
 }
 
 .groupLinks {
@@ -135,16 +166,19 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   color: var(--text-secondary);
   font-size: var(--text-md);
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid transparent;
 }
 
 .link:hover {
   background: var(--bg-surface-hover);
   color: var(--text-primary);
+  border-color: var(--border-subtle);
 }
 
 .link:focus-visible {
@@ -155,6 +189,8 @@
 .active {
   background: var(--bg-surface-hover);
   color: var(--text-primary);
+  border-left: 3px solid var(--accent);
+  box-shadow: inset 4px 0 8px var(--accent-glow);
 }
 
 .linkIcon {
@@ -163,14 +199,16 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--bg-base);
   color: var(--text-secondary);
   flex-shrink: 0;
+  border: 1px solid var(--border-subtle);
 }
 
 .active .linkIcon {
   color: var(--accent);
+  border-color: var(--border-glow-dim);
 }
 
 .linkText {

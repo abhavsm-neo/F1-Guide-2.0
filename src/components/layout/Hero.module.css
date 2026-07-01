@@ -4,6 +4,34 @@
   background: linear-gradient(180deg, var(--bg-base) 0%, var(--bg-surface) 100%);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-6) var(--space-5);
+  position: relative;
+}
+
+/* Corner brackets on hero */
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-glow-dim);
+  pointer-events: none;
+  z-index: 2;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero::before {
+  top: var(--space-5);
+  left: var(--space-5);
+  border-right: none;
+  border-bottom: none;
+}
+
+.hero::after {
+  bottom: var(--space-5);
+  right: var(--space-5);
+  border-left: none;
+  border-top: none;
 }
 
 .inner {
@@ -15,13 +43,14 @@
 }
 
 .title {
-  font-family: var(--font-body);
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(40px, 5vw, 56px);
   letter-spacing: -0.02em;
   line-height: 1.1;
   color: var(--text-primary);
   margin: 0;
+  text-transform: uppercase;
 }
 
 .subtitle {
@@ -29,6 +58,8 @@
   color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
 }
 
 .pills {
@@ -45,27 +76,78 @@
   padding: var(--space-3) var(--space-4);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   min-width: 120px;
+  position: relative;
+}
+
+/* Corner brackets on pills */
+.pill::before,
+.pill::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--border-glow-dim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+}
+
+.pill::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.pill::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+.pill:hover::before,
+.pill:hover::after {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .pillLabel {
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--text-secondary);
 }
 
 .pillValue {
+  font-family: var(--font-mono);
   font-size: var(--text-md);
   font-weight: 600;
   color: var(--text-primary);
 }
 
+/* Round number gets cyan glow */
+.pill:nth-child(2) .pillValue {
+  color: var(--hud-cyan);
+  text-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
+}
+
 @media (max-width: 639px) {
   .hero {
     padding: var(--space-5) var(--space-4);
+  }
+
+  .hero::before {
+    top: var(--space-4);
+    left: var(--space-4);
+  }
+
+  .hero::after {
+    bottom: var(--space-4);
+    right: var(--space-4);
   }
 
   .title {

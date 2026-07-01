@@ -8,6 +8,19 @@
   display: none;
 }
 
+/* Glowing cyan bottom border */
+.bar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hud-cyan), transparent);
+  box-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
+  pointer-events: none;
+}
+
 .inner {
   max-width: var(--max-content-width);
   margin: 0 auto;
@@ -23,6 +36,20 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+  position: relative;
+}
+
+/* Live indicator dot via ::before */
+.info::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hud-green);
+  box-shadow: 0 0 6px var(--hud-green), 0 0 12px rgba(0, 255, 136, 0.3);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
 }
 
 .flag {
@@ -37,6 +64,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .meta {
@@ -44,6 +74,8 @@
   color: var(--text-tertiary);
   font-weight: 500;
   flex-shrink: 0;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
 }
 
 .timer {
@@ -58,14 +90,17 @@
 }
 
 .num {
-  color: var(--text-primary);
+  color: var(--hud-cyan);
   background: var(--bg-base);
   padding: 3px 6px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   border: 1px solid var(--border-subtle);
   min-width: 26px;
   text-align: center;
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: var(--text-md);
+  text-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
 }
 
 .sep {

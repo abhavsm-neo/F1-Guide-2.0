@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 500;
   animation: fadeIn 0.2s ease both;
 }
@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 560px;
   background: var(--bg-elevated);
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   box-shadow: var(--shadow-lg);
   z-index: 600;
   opacity: 0;
@@ -28,12 +28,46 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Corner brackets on modal */
+.modal::before,
+.modal::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-glow-dim);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.modal::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.modal::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
 }
 
 .open {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) scale(1);
+}
+
+.open.modal::before,
+.open.modal::after {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .inputWrap {
@@ -59,6 +93,11 @@
   font-family: var(--font-body);
 }
 
+.input:focus {
+  border-bottom: 1px solid var(--border-glow);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
 .input::placeholder {
   color: var(--text-tertiary);
 }
@@ -69,18 +108,20 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
 .clearBtn:hover {
   background: var(--bg-surface-hover);
   color: var(--text-primary);
+  border-color: var(--border-glow);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .kbd {
@@ -89,9 +130,10 @@
   color: var(--text-tertiary);
   background: var(--bg-surface);
   padding: 3px 7px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   border: 1px solid var(--border-subtle);
   flex-shrink: 0;
+  letter-spacing: 0.05em;
 }
 
 .results {
@@ -133,7 +175,7 @@
 .resultIcon {
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   border: 1px solid;
   display: flex;
   align-items: center;
@@ -156,7 +198,7 @@
 .highlight {
   background: var(--accent-muted);
   color: var(--accent);
-  border-radius: 2px;
+  border-radius: 0;
   padding: 0 2px;
 }
 
@@ -166,16 +208,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: var(--font-mono);
 }
 
 .resultBadge {
   font-size: var(--text-xs);
   font-weight: 600;
   padding: 2px 8px;
-  border-radius: var(--radius-full);
+  border-radius: 0;
   border: 1px solid;
   text-transform: uppercase;
   flex-shrink: 0;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
 }
 
 .footer {
@@ -184,6 +229,8 @@
   color: var(--text-tertiary);
   font-family: var(--font-mono);
   border-top: 1px solid var(--border-subtle);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .empty {
@@ -209,4 +256,5 @@
 .emptyHint {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
+  font-family: var(--font-mono);
 }

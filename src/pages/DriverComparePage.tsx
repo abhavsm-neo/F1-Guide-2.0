@@ -37,7 +37,7 @@ export default function DriverComparePage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.headerRow}>
+      <div className={styles.sectionHeader}>
         <SectionHeader
           title="Driver"
           accent="Compare"
