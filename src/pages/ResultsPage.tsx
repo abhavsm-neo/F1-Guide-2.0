@@ -33,8 +33,15 @@ export default function ResultsPage() {
         fetchDriverStandings(YEAR),
         fetchConstructorStandings(YEAR),
       ]);
-      setRaces(racesData);
-      if (racesData.length > 0) setSelectedIdx(racesData.length - 1);
+      // Filter to completed races (date is in the past) and take last 3
+      const now = new Date();
+      const completedRaces = racesData.filter((r) => {
+        const raceDate = new Date(r.date);
+        return raceDate < now;
+      });
+      const lastThree = completedRaces.slice(-3);
+      setRaces(lastThree);
+      if (lastThree.length > 0) setSelectedIdx(lastThree.length - 1);
       setDriverStandings(drvData);
       setConstructorStandings(ctorData);
       setLastUpdated(new Date());
@@ -108,15 +115,15 @@ export default function ResultsPage() {
       {!loading && !error && races.length === 0 && (
         <EmptyState
           icon={Trophy}
-          title={`NO RACES YET IN ${YEAR}`}
-          sub="Race data will appear here once the season begins."
+          title={`NO COMPLETED RACES IN ${YEAR}`}
+          sub="Race results will appear here once races are completed."
         />
       )}
 
       {!loading && races.length > 0 && (
         <>
           <div className={styles.raceSelector}>
-            <div className={styles.selectorLabel}>Select Race</div>
+            <div className={styles.selectorLabel}>Last 3 Completed Races</div>
             <div className={styles.raceButtons}>
               {races.map((r, i) => (
                 <button

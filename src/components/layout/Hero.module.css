@@ -51,6 +51,7 @@
   color: var(--text-primary);
   margin: 0;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .subtitle {
@@ -60,6 +61,7 @@
   line-height: 1.5;
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
+  text-align: center;
 }
 
 .pills {
@@ -67,6 +69,7 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   margin-top: var(--space-3);
+  justify-content: center;
 }
 
 .pill {
