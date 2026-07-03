@@ -35,12 +35,12 @@ export default function ResultsPage() {
         fetchDriverStandings(YEAR),
         fetchConstructorStandings(YEAR),
       ]);
-      // Filter to completed races (date is in the past) and take last 3
+      // Filter to completed races (date is in the past), sort by round
+      // ascending, then take the last 3 = the most recently completed races.
       const now = new Date();
-      const completedRaces = racesData.filter((r) => {
-        const raceDate = new Date(r.date);
-        return raceDate < now;
-      });
+      const completedRaces = racesData
+        .filter((r) => new Date(r.date) < now)
+        .sort((a, b) => parseInt(a.round) - parseInt(b.round));
       const lastThree = completedRaces.slice(-3);
       setRaces(lastThree);
       if (lastThree.length > 0) setSelectedIdx(lastThree.length - 1);
@@ -118,7 +118,7 @@ export default function ResultsPage() {
         <EmptyState
           icon={Trophy}
           title={`NO COMPLETED RACES IN ${YEAR}`}
-          sub="Race results will appear here once races are completed."
+          sub="Race results will appear here once races are completed. The API may be temporarily unavailable."
         />
       )}
 
