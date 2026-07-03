@@ -24,26 +24,26 @@ export default function ResultsPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const YEAR = new Date().getFullYear();
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const loadAll = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const [racesData, drvData, ctorData] = await Promise.all([
-        fetchRaces(YEAR),
-        fetchDriverStandings(YEAR),
-        fetchConstructorStandings(YEAR),
+        fetchRaces(year),
+        fetchDriverStandings(year),
+        fetchConstructorStandings(year),
       ]);
       // Filter to completed races (date is in the past), sort by round
-      // ascending, then take the last 3 = the most recently completed races.
+      // descending, then take the first 3 = the most recently completed races.
       const now = new Date();
       const completedRaces = racesData
         .filter((r) => new Date(r.date) < now)
-        .sort((a, b) => parseInt(a.round) - parseInt(b.round));
-      const lastThree = completedRaces.slice(-3);
+        .sort((a, b) => parseInt(b.round) - parseInt(a.round));
+      const lastThree = completedRaces.slice(0, 3);
       setRaces(lastThree);
-      if (lastThree.length > 0) setSelectedIdx(lastThree.length - 1);
+      if (lastThree.length > 0) setSelectedIdx(0);
       setDriverStandings(drvData);
       setConstructorStandings(ctorData);
       setLastUpdated(new Date());
@@ -52,7 +52,7 @@ export default function ResultsPage() {
     } finally {
       setLoading(false);
     }
-  }, [YEAR]);
+  }, [year]);
 
   useEffect(() => {
     loadAll();
@@ -71,7 +71,7 @@ export default function ResultsPage() {
   return (
     <PageReveal className={styles.page}>
       <SectionHeader
-        title={`${YEAR}`}
+        title={`${year}`}
         accent="Results"
         group="Race & Stats"
         icon={Trophy}
@@ -117,15 +117,34 @@ export default function ResultsPage() {
       {!loading && !error && races.length === 0 && (
         <EmptyState
           icon={Trophy}
-          title={`NO COMPLETED RACES IN ${YEAR}`}
+          title={`NO COMPLETED RACES IN ${year}`}
           sub="Race results will appear here once races are completed. The API may be temporarily unavailable."
         />
+      )}
+
+      {!loading && !error && (
+        <div className={styles.yearSelector}>
+          <button
+            className={`${styles.yearBtn} ${year === 2025 ? styles.yearBtnActive : ''}`}
+            onClick={() => setYear(2025)}
+            aria-pressed={year === 2025}
+          >
+            2025
+          </button>
+          <button
+            className={`${styles.yearBtn} ${year === 2026 ? styles.yearBtnActive : ''}`}
+            onClick={() => setYear(2026)}
+            aria-pressed={year === 2026}
+          >
+            2026
+          </button>
+        </div>
       )}
 
       {!loading && races.length > 0 && (
         <>
           <div className={styles.raceSelector}>
-            <div className={styles.selectorLabel}>Last 3 Completed Races</div>
+            <div className={styles.selectorLabel}>Last 3 Completed Races · {year}</div>
             <div className={styles.raceButtons}>
               {races.map((r, i) => (
                 <button
