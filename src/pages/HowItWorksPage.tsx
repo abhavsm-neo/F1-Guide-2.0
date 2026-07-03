@@ -5,6 +5,7 @@ import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import { pad } from '../utils/format';
 import styles from './HowItWorksPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 const HOW_CARDS = [
   { title: 'What is F1?', text: 'Formula 1 is the pinnacle of motorsport — the fastest, most technologically advanced racing series on Earth. 11 teams, 22 drivers, 22 races in 2026 across the globe. Each team builds their own car around a common set of rules.' },
@@ -95,7 +96,7 @@ function FeaturedRaceCard() {
 
 export default function HowItWorksPage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="How"
@@ -117,6 +118,6 @@ export default function HowItWorksPage() {
           </div>
         ))}
       </div>
-    </div>
+    </PageReveal>
   );
 }

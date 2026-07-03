@@ -4,12 +4,13 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { F1_RULES } from '../data/rules';
 import styles from './RulesPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function RulesPage() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Explain"
@@ -59,6 +60,6 @@ export default function RulesPage() {
           )}
         </div>
       ))}
-    </div>
+    </PageReveal>
   );
 }

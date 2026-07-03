@@ -4,6 +4,7 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { QUIZ_QUESTIONS } from '../data/quiz';
 import styles from './QuizPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 interface AnswerRecord {
   correct: boolean;
@@ -59,7 +60,7 @@ export default function QuizPage() {
 
   if (finished) {
     return (
-      <div className={styles.page}>
+      <PageReveal className={styles.page}>
         <div className={styles.sectionHeader}>
           <SectionHeader
             title="F1"
@@ -113,12 +114,12 @@ export default function QuizPage() {
             </div>
           ))}
         </div>
-      </div>
+      </PageReveal>
     );
   }
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="F1"
@@ -188,6 +189,6 @@ export default function QuizPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageReveal>
   );
 }

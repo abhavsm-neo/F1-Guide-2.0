@@ -8,6 +8,7 @@ import { fetchNews } from '../utils/api';
 import { timeAgo } from '../utils/format';
 import type { NewsItem } from '../types';
 import styles from './NewsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -35,7 +36,7 @@ export default function NewsPage() {
   useAutoRefresh(loadNews, 5 * 60_000);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <SectionHeader
         title="F1"
         accent="News"
@@ -98,6 +99,6 @@ export default function NewsPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

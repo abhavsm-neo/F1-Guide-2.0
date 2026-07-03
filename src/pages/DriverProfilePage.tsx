@@ -7,6 +7,8 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { RatingBar } from '../components/ui/RatingBar';
+import { CountUp } from '../components/ui/CountUp';
+import { PageReveal } from '../components/ui/PageReveal';
 import styles from './DriverProfilePage.module.css';
 
 export default function DriverProfilePage() {
@@ -31,19 +33,19 @@ export default function DriverProfilePage() {
 
   if (!driver) {
     return (
-      <div className={styles.page}>
+      <PageReveal className={styles.page}>
         <EmptyState
           icon={User}
           title="DRIVER NOT FOUND"
           sub={`No driver found with ID "${driverId}".`}
           action={{ label: '← Back to Drivers', onClick: () => navigate('/drivers') }}
         />
-      </div>
+      </PageReveal>
     );
   }
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title={driver.name}
@@ -67,7 +69,7 @@ export default function DriverProfilePage() {
             className={styles.heroNumber}
             style={{ color: driver.teamColor }}
           >
-            {driver.number}
+            <CountUp target={driver.number} />
           </div>
           <div className={styles.heroInfo}>
             <div className={styles.heroName}>{driver.name}</div>
@@ -95,13 +97,15 @@ export default function DriverProfilePage() {
       <div className={styles.statsGrid}>
         {[
           { label: 'Championships', value: driver.championships },
-          { label: 'Wins', value: driver.wins },
-          { label: 'Poles', value: driver.poles },
+          { label: 'Wins', value: parseInt(driver.wins, 10) || 0 },
+          { label: 'Poles', value: parseInt(driver.poles, 10) || 0 },
         ].map((stat) => (
           <div key={stat.label} className={styles.statCard}>
-            <div className={styles.statValue} style={{ color: driver.teamColor }}>
-              {stat.value}
-            </div>
+            <CountUp
+              target={typeof stat.value === 'number' ? stat.value : Number(stat.value)}
+              className={styles.statValue}
+              style={{ color: driver.teamColor }}
+            />
             <div className={styles.statLabel}>{stat.label}</div>
           </div>
         ))}
@@ -170,6 +174,6 @@ export default function DriverProfilePage() {
       <button className={styles.backBtn} onClick={() => navigate('/drivers')}>
         ← Back to All Drivers
       </button>
-    </div>
+    </PageReveal>
   );
 }

@@ -11,7 +11,9 @@ import {
 } from '../utils/api';
 import { ergastColor } from '../utils/colors';
 import type { JolpicaRace, DriverStanding, ConstructorStanding } from '../types';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './ResultsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function ResultsPage() {
   const [races, setRaces] = useState<JolpicaRace[]>([]);
@@ -67,7 +69,7 @@ export default function ResultsPage() {
   );
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <SectionHeader
         title={`${YEAR}`}
         accent="Results"
@@ -132,7 +134,7 @@ export default function ResultsPage() {
                   onClick={() => setSelectedIdx(i)}
                   aria-label={`Select race ${r.raceName}`}
                 >
-                  R{r.round}{' '}
+                  R<CountUp target={Number(r.round)} startOnMount />{' '}
                   {r.raceName.replace(' Grand Prix', '').replace(' Prix', '')}
                 </button>
               ))}
@@ -142,7 +144,7 @@ export default function ResultsPage() {
           {selectedRace && (
             <div className={styles.raceCard}>
               <div className={styles.raceHeader}>
-                <div className={styles.roundLabel}>Round {selectedRace.round}</div>
+                <div className={styles.roundLabel}>Round <CountUp target={Number(selectedRace.round)} startOnMount /></div>
                 <div className={styles.raceName}>{selectedRace.raceName}</div>
                 <div className={styles.raceMeta}>
                   {selectedRace.Circuit?.circuitName} ·{' '}
@@ -182,7 +184,7 @@ export default function ResultsPage() {
                                 pos === 1 ? styles.gold : pos === 2 ? styles.silver : pos === 3 ? styles.bronze : ''
                               }`}
                             >
-                              {row.position}
+                              <CountUp target={pos} />
                             </span>
                           </td>
                           <td className={styles.td}>
@@ -207,10 +209,10 @@ export default function ResultsPage() {
                           </td>
                           <td className={`${styles.td} ${styles.pointsCell}`}>
                             <span className={pos <= 3 ? styles.topPoints : ''}>
-                              {row.points || '—'}
+                              {row.points ? <CountUp target={Number(row.points)} /> : '—'}
                             </span>
                           </td>
-                          <td className={styles.td}>{row.laps}</td>
+                          <td className={styles.td}><CountUp target={Number(row.laps) || 0} /></td>
                           <td className={styles.td}>
                             <span className={row.status === 'Finished' ? styles.finished : styles.statusText}>
                               {row.status}
@@ -236,7 +238,7 @@ export default function ResultsPage() {
                           </div>
                           <div className={styles.dnfTeam}>{d.Constructor?.name}</div>
                           <div className={styles.dnfMeta}>
-                            {d.status} · {d.laps} laps
+                            {d.status} · <CountUp target={Number(d.laps) || 0} /> laps
                           </div>
                         </div>
                       );
@@ -279,7 +281,7 @@ export default function ResultsPage() {
                                 row.pos === 1 ? styles.gold : row.pos === 2 ? styles.silver : row.pos === 3 ? styles.bronze : ''
                               }`}
                             >
-                              {row.pos}
+                              <CountUp target={row.pos} />
                             </span>
                           </td>
                           <td className={styles.td}>
@@ -300,9 +302,9 @@ export default function ResultsPage() {
                               {row.team}
                             </span>
                           </td>
-                          <td className={`${styles.td} ${styles.monoCell}`}>{row.wins}</td>
+                          <td className={`${styles.td} ${styles.monoCell}`}><CountUp target={row.wins} /></td>
                           <td className={`${styles.td} ${styles.pointsCell}`}>
-                            <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
+                            <span className={isTop3 ? styles.topPoints : ''}><CountUp target={row.pts} /></span>
                           </td>
                         </tr>
                       );
@@ -339,7 +341,7 @@ export default function ResultsPage() {
                                 row.pos === 1 ? styles.gold : row.pos === 2 ? styles.silver : row.pos === 3 ? styles.bronze : ''
                               }`}
                             >
-                              {row.pos}
+                              <CountUp target={row.pos} />
                             </span>
                           </td>
                           <td className={styles.td}>
@@ -354,9 +356,9 @@ export default function ResultsPage() {
                               {row.name}
                             </span>
                           </td>
-                          <td className={`${styles.td} ${styles.monoCell}`}>{row.wins}</td>
+                          <td className={`${styles.td} ${styles.monoCell}`}><CountUp target={row.wins} /></td>
                           <td className={`${styles.td} ${styles.pointsCell}`}>
-                            <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
+                            <span className={isTop3 ? styles.topPoints : ''}><CountUp target={row.pts} /></span>
                           </td>
                         </tr>
                       );
@@ -371,6 +373,6 @@ export default function ResultsPage() {
           )}
         </>
       )}
-    </div>
+    </PageReveal>
   );
 }

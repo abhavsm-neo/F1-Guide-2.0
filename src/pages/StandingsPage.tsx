@@ -10,7 +10,9 @@ import {
 } from '../utils/api';
 import { ergastColor, PODIUM_COLORS } from '../utils/colors';
 import type { DriverStanding, ConstructorStanding } from '../types';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './StandingsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function StandingsPage() {
   const [driverStandings, setDriverStandings] = useState<DriverStanding[]>([]);
@@ -47,7 +49,7 @@ export default function StandingsPage() {
   const maxCtorPts = useMemo(() => constructorStandings[0]?.pts || 1, [constructorStandings]);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <SectionHeader
         title={`${YEAR}`}
         accent="Live Standings"
@@ -125,7 +127,7 @@ export default function StandingsPage() {
                         className={styles.position}
                         style={{ color: isTop3 ? PODIUM_COLORS[row.pos - 1] : 'var(--text-tertiary)' }}
                       >
-                        {row.pos}
+                        <CountUp target={row.pos} />
                       </span>
                       <div className={styles.driverInfo}>
                         <div className={styles.driverName}>{row.name}</div>
@@ -138,13 +140,13 @@ export default function StandingsPage() {
                           </span>
                           {row.wins > 0 && (
                             <span className={styles.winBadge}>
-                              <Trophy size={10} /> {row.wins}W
+                              <Trophy size={10} /> <CountUp target={row.wins} />W
                             </span>
                           )}
                         </div>
                       </div>
                       <div className={styles.points}>
-                        <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
+                        <span className={isTop3 ? styles.topPoints : ''}><CountUp target={row.pts} /></span>
                       </div>
                     </div>
                     <div className={styles.barTrack}>
@@ -184,7 +186,7 @@ export default function StandingsPage() {
                         className={styles.position}
                         style={{ color: isTop3 ? PODIUM_COLORS[row.pos - 1] : 'var(--text-tertiary)' }}
                       >
-                        {row.pos}
+                        <CountUp target={row.pos} />
                       </span>
                       <div className={styles.driverInfo}>
                         <div className={styles.ctorName} style={{ color: col }}>
@@ -192,12 +194,12 @@ export default function StandingsPage() {
                         </div>
                         {row.wins > 0 && (
                           <div className={styles.winBadge}>
-                            <Trophy size={10} /> {row.wins} win{row.wins !== 1 ? 's' : ''}
+                            <Trophy size={10} /> <CountUp target={row.wins} /> win{row.wins !== 1 ? 's' : ''}
                           </div>
                         )}
                       </div>
                       <div className={styles.points}>
-                        <span className={isTop3 ? styles.topPoints : ''}>{row.pts}</span>
+                        <span className={isTop3 ? styles.topPoints : ''}><CountUp target={row.pts} /></span>
                       </div>
                     </div>
                     <div className={styles.barTrack}>
@@ -220,6 +222,6 @@ export default function StandingsPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

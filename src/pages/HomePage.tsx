@@ -18,7 +18,9 @@ import {
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import { POWER_RANKINGS_2026 } from '../data/season_preview';
 import { pad } from '../utils/format';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './HomePage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 const QUICK_LINKS = [
   { id: '/drivers', icon: Users, label: 'Drivers', sub: 'All 22 on the 2026 grid' },
@@ -92,7 +94,7 @@ export default function HomePage() {
   });
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       {/* Skip link target for accessibility */}
       <div id="main-content" tabIndex={-1} />
 
@@ -240,7 +242,7 @@ export default function HomePage() {
                   color: r.pos <= 3 ? r.color : 'var(--text-tertiary)',
                 }}
               >
-                {r.pos}
+                <CountUp target={r.pos} />
               </div>
               <div
                 className={styles.powerColorDot}
@@ -265,7 +267,7 @@ export default function HomePage() {
                 className={styles.powerScore}
                 style={{ color: r.color }}
               >
-                {r.power}
+                <CountUp target={r.power} />
               </div>
             </div>
           ))}
@@ -297,6 +299,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-    </div>
+    </PageReveal>
   );
 }

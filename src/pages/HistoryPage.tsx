@@ -3,10 +3,11 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { DRIVER_HISTORY } from '../data/history';
 import styles from './HistoryPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function HistoryPage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Driver"
@@ -54,6 +55,6 @@ export default function HistoryPage() {
           </div>
         ))}
       </div>
-    </div>
+    </PageReveal>
   );
 }

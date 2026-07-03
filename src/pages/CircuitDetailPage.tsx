@@ -5,6 +5,7 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
+import { PageReveal } from '../components/ui/PageReveal';
 import styles from './CircuitDetailPage.module.css';
 
 export default function CircuitDetailPage() {
@@ -29,7 +30,7 @@ export default function CircuitDetailPage() {
 
   if (!race) {
     return (
-      <div className={styles.page}>
+      <PageReveal className={styles.page}>
         <div className={styles.sectionHeader}>
           <SectionHeader
             title="Circuit"
@@ -44,7 +45,7 @@ export default function CircuitDetailPage() {
           title="CIRCUIT NOT FOUND"
           sub={`No circuit matches "${circuitId}". Check the circuits list.`}
         />
-      </div>
+      </PageReveal>
     );
   }
 
@@ -100,7 +101,7 @@ export default function CircuitDetailPage() {
   }
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title={race.name}
@@ -191,6 +192,6 @@ export default function CircuitDetailPage() {
           );
         })}
       </div>
-    </div>
+    </PageReveal>
   );
 }

@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Users, Search } from 'lucide-react';
 import { DRIVERS_2025 } from '../data/drivers';
 import { DriverCard } from '../components/ui/DriverCard';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
+import { ScrollReveal } from '../components/ui/ScrollReveal';
 import styles from './DriversPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 const TEAM_FILTERS = [
   'All',
@@ -24,7 +25,6 @@ const TEAM_FILTERS = [
 ];
 
 export default function DriversPage() {
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
   const [showDropped, setShowDropped] = useState(false);
@@ -54,7 +54,7 @@ export default function DriversPage() {
   }, [source, search, filter]);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="2026"
@@ -110,16 +110,10 @@ export default function DriversPage() {
       </div>
 
       <div className={styles.cardGrid}>
-        {filtered.map((d) => (
-          <div
-            key={d.id}
-            onClick={() => navigate(`/drivers/${d.id}`)}
-            style={{ cursor: 'pointer' }}
-            role="link"
-            aria-label={`View profile for ${d.name}`}
-          >
+        {filtered.map((d, i) => (
+          <ScrollReveal key={d.id} delay={i * 80}>
             <DriverCard driver={d} />
-          </div>
+          </ScrollReveal>
         ))}
       </div>
 
@@ -130,6 +124,6 @@ export default function DriversPage() {
           sub={`No drivers match "${search || filter}" — try clearing your search or filter.`}
         />
       )}
-    </div>
+    </PageReveal>
   );
 }

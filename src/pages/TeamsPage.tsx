@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Users, Search } from 'lucide-react';
 import { TEAMS_2025, TEAMS_2026 } from '../data/teams';
 import { TeamCard } from '../components/ui/TeamCard';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
+import { ScrollReveal } from '../components/ui/ScrollReveal';
 import styles from './TeamsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function TeamsPage() {
-  const navigate = useNavigate();
   const [year, setYear] = useState<'2025' | '2026'>('2026');
   const [search, setSearch] = useState('');
 
@@ -26,7 +26,7 @@ export default function TeamsPage() {
   }, [source, search]);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="The"
@@ -80,16 +80,10 @@ export default function TeamsPage() {
       </div>
 
       <div className={styles.cardGrid}>
-        {filtered.map((t) => (
-          <div
-            key={t.id + year}
-            onClick={() => navigate(`/teams/${t.id}`)}
-            style={{ cursor: 'pointer' }}
-            role="link"
-            aria-label={`View profile for ${t.name}`}
-          >
+        {filtered.map((t, i) => (
+          <ScrollReveal key={t.id + year} delay={i * 80}>
             <TeamCard team={t} />
-          </div>
+          </ScrollReveal>
         ))}
       </div>
 
@@ -98,6 +92,6 @@ export default function TeamsPage() {
           No teams found matching "{search}"
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

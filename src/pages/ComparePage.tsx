@@ -4,6 +4,7 @@ import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { CAR_COMPARE } from '../data/car_compare';
 import type { CarCompareRow } from '../types';
 import styles from './ComparePage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   '⚡': <Zap size={18} />,
@@ -20,7 +21,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 
 export default function ComparePage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="2025 vs"
@@ -86,6 +87,6 @@ export default function ComparePage() {
           regulation resets create new winners — 2026 could change everything.
         </p>
       </div>
-    </div>
+    </PageReveal>
   );
 }

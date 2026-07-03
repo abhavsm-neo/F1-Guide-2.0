@@ -3,11 +3,22 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { ALL_TIME_RECORDS } from '../data/records';
 import { PODIUM_COLORS } from '../utils/colors';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './RecordsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
+
+function RecordStat({ value, className }: { value: string; className?: string }) {
+  const match = value.match(/^(\d+(?:\.\d+)?)(.*)$/);
+  if (!match) {
+    return <span className={className}>{value}</span>;
+  }
+  const [, num, suffix] = match;
+  return <CountUp target={Number(num)} suffix={suffix} className={className} />;
+}
 
 export default function RecordsPage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="All-Time"
@@ -57,7 +68,7 @@ export default function RecordsPage() {
                     <div className={styles.recordDriverName}>{row.name}</div>
                     <div className={styles.recordNote}>{row.note}</div>
                   </div>
-                  <span className={styles.recordValue}>{row.value}</span>
+                  <RecordStat value={row.value} className={styles.recordValue} />
                 </div>
               ))}
             </div>
@@ -71,6 +82,6 @@ export default function RecordsPage() {
           marked with +
         </div>
       </div>
-    </div>
+    </PageReveal>
   );
 }

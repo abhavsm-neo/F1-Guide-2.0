@@ -7,6 +7,7 @@ import { ACTIVE_DRIVERS_2026 } from '../data/drivers';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import type { ActiveDriver } from '../types';
 import styles from './PredictorPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 const DRIVER_BY_SHORT: Record<string, ActiveDriver> = Object.fromEntries(
   ACTIVE_DRIVERS_2026.map(d => [d.short.toLowerCase(), d])
@@ -165,7 +166,7 @@ export default function PredictorPage() {
   }, [picks, nextRace]);
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Race"
@@ -283,6 +284,6 @@ export default function PredictorPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

@@ -6,6 +6,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { RACE_CALENDAR_2026 } from '../data/circuits';
 import type { Race } from '../types';
 import styles from './CircuitsPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 function SessionTimesSection() {
   const now = new Date();
@@ -123,7 +124,7 @@ export default function CircuitsPage() {
   }
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="2026"
@@ -312,6 +313,6 @@ export default function CircuitsPage() {
           sub="Try a different search term."
         />
       )}
-    </div>
+    </PageReveal>
   );
 }

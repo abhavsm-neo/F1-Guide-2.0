@@ -3,10 +3,11 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { POINTS_DATA, CHAMPIONSHIP_HISTORY } from '../data/records';
 import styles from './PointsSystemPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function PointsSystemPage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Points"
@@ -103,6 +104,6 @@ export default function PointsSystemPage() {
           </table>
         </div>
       </div>
-    </div>
+    </PageReveal>
   );
 }

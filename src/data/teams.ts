@@ -29,3 +29,5 @@ export const TEAMS_2026: Team[] = [
   { id: "cadillac", name: "Cadillac F1 Team", base: "Fishers, Indiana, USA / Silverstone, UK", color: "#CC0000", engine: "Ferrari (→ GM/Cadillac 2029)", tp: "Graeme Lowdon", founded: 2026, championships: "0", drivers: ["Valtteri Bottas", "Sergio Perez"], desc: "The American dream arrives. F1's 11th team — the first brand new constructor since Haas in 2016. Backed by General Motors and TWG Motorsports. Both drivers sat out 2025: Bottas after leaving Sauber, Perez after Red Bull. Combined experience of 500+ grands prix. Realistic goal for 2026 is simply reliability and staying inside the 107% rule. Zhou Guanyu is reserve driver, Colton Herta is test driver while racing in F2.", engineNote: "Ferrari-supplied until 2029, when GM begins manufacturing their own F1 power unit in Charlotte, North Carolina. Cadillac will then become a full works manufacturer — a huge long-term commitment from General Motors." },
 ];
 
+
+export const TEAMS = TEAMS_2026;

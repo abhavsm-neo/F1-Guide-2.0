@@ -4,6 +4,7 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { TYRE_STRATEGIES } from '../data/tyre_strategy';
 import styles from './TyreStrategyPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function TyreStrategyPage() {
   const [raceIdx, setRaceIdx] = useState(0);
@@ -11,7 +12,7 @@ export default function TyreStrategyPage() {
   const race = TYRE_STRATEGIES[raceIdx];
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Tyre"
@@ -132,6 +133,6 @@ export default function TyreStrategyPage() {
           ))}
         </div>
       </div>
-    </div>
+    </PageReveal>
   );
 }

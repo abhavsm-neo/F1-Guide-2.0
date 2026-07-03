@@ -6,7 +6,9 @@ import {
   TrendingUp, Home, ChevronRight
 } from 'lucide-react';
 import { NAV_GROUPS } from '../../data/nav';
+import { TEAMS } from '../../data/teams';
 import { useBookmarks } from '../../context/BookmarksContext';
+import { useTheme } from '../../context/ThemeContext';
 import styles from './Sidebar.module.css';
 
 const SECTION_META: Record<string, { icon: React.ElementType; label: string }> = {
@@ -45,6 +47,7 @@ const TEAM_COLOR_IDS = ['drivers', 'teams'];
 export function Sidebar() {
   const location = useLocation();
   const { bookmarks } = useBookmarks();
+  const { favoriteTeam, setFavoriteTeam } = useTheme();
   const [openSections, setOpenSections] = useState<Set<string>>(() => {
     const all = new Set<string>();
     NAV_GROUPS.forEach(g => all.add(g.label));
@@ -189,6 +192,33 @@ export function Sidebar() {
             )}
           </div>
         </nav>
+
+        {/* Favorite team picker */}
+        <div className={styles.teamPicker}>
+          <span className={styles.teamPickerLabel}>Favorite Team</span>
+          <div className={styles.teamGrid}>
+            {TEAMS.map(team => (
+              <button
+                key={team.id}
+                type="button"
+                className={`${styles.teamPickerDot} ${favoriteTeam === team.id ? styles.teamPickerDotActive : ''}`}
+                style={{ background: team.color }}
+                onClick={() => setFavoriteTeam(favoriteTeam === team.id ? null : team.id)}
+                aria-label={team.name}
+                title={team.name}
+              />
+            ))}
+          </div>
+          {favoriteTeam && (
+            <button
+              type="button"
+              className={styles.clearTeam}
+              onClick={() => setFavoriteTeam(null)}
+            >
+              Clear Selection
+            </button>
+          )}
+        </div>
 
         {/* Bookmark quick-access at bottom */}
         <div className={styles.bookmarkBar}>

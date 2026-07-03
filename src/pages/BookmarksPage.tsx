@@ -4,6 +4,7 @@ import { useBookmarks } from '../context/BookmarksContext';
 import { NAV_GROUPS } from '../data/nav';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import styles from './BookmarksPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 interface BookmarkSection {
   id: string;
@@ -20,7 +21,7 @@ export default function BookmarksPage() {
   );
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="My"
@@ -119,6 +120,6 @@ export default function BookmarksPage() {
           })}
         </div>
       </div>
-    </div>
+    </PageReveal>
   );
 }

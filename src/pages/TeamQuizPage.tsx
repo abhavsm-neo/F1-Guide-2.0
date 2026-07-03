@@ -3,6 +3,7 @@ import { Brain, RotateCcw, Car } from 'lucide-react';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import styles from './TeamQuizPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 interface TeamQuizOption {
   text: string;
@@ -139,7 +140,7 @@ export default function TeamQuizPage() {
   const quizResult = result ? TEAM_QUIZ_RESULTS[result] : null;
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Which"
@@ -215,6 +216,6 @@ export default function TeamQuizPage() {
           ))}
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

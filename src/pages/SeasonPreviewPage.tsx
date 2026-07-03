@@ -7,7 +7,9 @@ import {
   RACE_PREVIEWS_2026,
   ROOKIES_2026,
 } from '../data/season_preview';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './SeasonPreviewPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function SeasonPreviewPage() {
   const [tab, setTab] = useState<'power' | 'races' | 'rookies'>('power');
@@ -19,7 +21,7 @@ export default function SeasonPreviewPage() {
   ];
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="2026"
@@ -98,7 +100,7 @@ export default function SeasonPreviewPage() {
                         }}
                       />
                     </div>
-                    <span className={styles.powerScore}>{r.power}/100</span>
+                    <span className={styles.powerScore}><CountUp target={r.power} />/100</span>
                   </div>
                 </div>
               </div>
@@ -204,7 +206,7 @@ export default function SeasonPreviewPage() {
               >
                 <div className={styles.rookieHeader}>
                   <span className={styles.rookieFlag}>{r.flag}</span>
-                  <span className={styles.rookieNumber}>#{r.number}</span>
+                  <span className={styles.rookieNumber}>#<CountUp target={r.number} /></span>
                 </div>
                 <div className={styles.rookieName}>{r.name}</div>
                 <div className={styles.rookieTeam}>
@@ -233,6 +235,6 @@ export default function SeasonPreviewPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageReveal>
   );
 }

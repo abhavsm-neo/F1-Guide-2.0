@@ -3,10 +3,11 @@ import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { ChampionshipTracker } from '../components/charts/ChampionshipTracker';
 import styles from './ChampionshipTrackerPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function ChampionshipTrackerPage() {
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Championship"
@@ -18,6 +19,6 @@ export default function ChampionshipTrackerPage() {
         <BookmarkButton sectionId="championship-tracker" />
       </div>
       <ChampionshipTracker />
-    </div>
+    </PageReveal>
   );
 }

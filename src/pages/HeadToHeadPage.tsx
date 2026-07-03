@@ -3,13 +3,15 @@ import { Swords } from 'lucide-react';
 import { H2H_DATA_2024 } from '../data/h2h';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
+import { CountUp } from '../components/ui/CountUp';
 import styles from './HeadToHeadPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function HeadToHeadPage() {
   const [metric, setMetric] = useState<'quali' | 'race'>('quali');
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Teammate"
@@ -61,8 +63,8 @@ export default function HeadToHeadPage() {
                     {winner}
                   </span>{' '}
                   leads {metric === 'quali' ? 'qualifying' : 'races'}{' '}
-                  {Math.max(d1Count, d2Count)}–
-                  {Math.min(d1Count, d2Count)}
+                  <CountUp target={Math.max(d1Count, d2Count)} />–
+                  <CountUp target={Math.min(d1Count, d2Count)} />
                 </div>
               )}
             </div>
@@ -80,7 +82,7 @@ export default function HeadToHeadPage() {
                   }}
                 >
                   {driver.name}{' '}
-                  <span className={styles.driverCount}>{driver.count}</span>
+                  <span className={styles.driverCount}><CountUp target={driver.count} /></span>
                 </div>
               ))}
             </div>
@@ -100,6 +102,6 @@ export default function HeadToHeadPage() {
           </div>
         );
       })}
-    </div>
+    </PageReveal>
   );
 }

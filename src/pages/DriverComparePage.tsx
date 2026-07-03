@@ -5,6 +5,7 @@ import { RadarChart } from '../components/charts/RadarChart';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import styles from './DriverComparePage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 interface AxisDef {
   label: string;
@@ -36,7 +37,7 @@ export default function DriverComparePage() {
   const winner = total1 > total2 ? d1 : total2 > total1 ? d2 : null;
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="Driver"
@@ -178,6 +179,6 @@ export default function DriverComparePage() {
           </div>
         </>
       )}
-    </div>
+    </PageReveal>
   );
 }

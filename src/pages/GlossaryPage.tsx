@@ -5,6 +5,7 @@ import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { GLOSSARY } from '../data/glossary';
 import styles from './GlossaryPage.module.css';
+import { PageReveal } from '../components/ui/PageReveal';
 
 export default function GlossaryPage() {
   const [search, setSearch] = useState('');
@@ -31,7 +32,7 @@ export default function GlossaryPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title="F1"
@@ -123,6 +124,6 @@ export default function GlossaryPage() {
           sub={`Nothing matches "${search}" — try a different search.`}
         />
       )}
-    </div>
+    </PageReveal>
   );
 }

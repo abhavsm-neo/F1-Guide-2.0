@@ -1,6 +1,8 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import type { Team } from '../../types';
-import { MapPin } from 'lucide-react';
+import { MapPin, Wrench, BarChart3 } from 'lucide-react';
+import { FlipCard } from './FlipCard';
+import { CountUp } from './CountUp';
 import styles from './TeamCard.module.css';
 
 interface TeamCardProps {
@@ -8,15 +10,8 @@ interface TeamCardProps {
 }
 
 export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div
-      className={styles.card}
-      role="article"
-      aria-label={team.name}
-    >
-      {/* Top team color strip */}
+  const front = (
+    <div className={styles.card}>
       <div
         className={styles.colorStrip}
         style={{
@@ -25,7 +20,6 @@ export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
         }}
       />
 
-      {/* Header */}
       <div className={styles.header}>
         <div className={styles.name}>{team.name}</div>
         <div className={styles.base}>
@@ -34,7 +28,6 @@ export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
         </div>
       </div>
 
-      {/* Stats row */}
       <div className={styles.statsRow}>
         <div className={styles.statPair}>
           <div className={styles.statLabel}>Engine</div>
@@ -46,15 +39,14 @@ export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
         </div>
         <div className={styles.statPair}>
           <div className={styles.statLabel}>Championships</div>
-          <div className={styles.statValue}>{team.championships}</div>
+          <CountUp target={parseInt(team.championships, 10) || 0} className={styles.statValue} />
         </div>
         <div className={styles.statPair}>
           <div className={styles.statLabel}>Founded</div>
-          <div className={styles.statValue}>{team.founded}</div>
+          <CountUp target={team.founded} className={styles.statValue} />
         </div>
       </div>
 
-      {/* Driver chips */}
       <div className={styles.driverChips}>
         {team.drivers.map((d: string) => (
           <span
@@ -70,25 +62,68 @@ export const TeamCard = memo(function TeamCard({ team }: TeamCardProps) {
         ))}
       </div>
 
-      {/* Description */}
       <p className={styles.description}>{team.desc}</p>
 
-      {/* Expanded engine notes */}
-      {expanded && (
-        <div className={styles.engineNotes}>
-          <div className={styles.engineNotesLabel}>Engine Notes</div>
-          <p className={styles.description}>{team.engineNote}</p>
-        </div>
-      )}
-
-      {/* Expand button */}
-      <button
-        className={styles.expandButton}
-        onClick={() => setExpanded(!expanded)}
-        aria-expanded={expanded}
-      >
-        {expanded ? 'Hide Engine Details' : 'Engine Details'}
-      </button>
+      <div className={styles.flipHint}>
+        <BarChart3 size={12} />
+        <span>Click for engine details</span>
+      </div>
     </div>
   );
+
+  const back = (
+    <div className={`${styles.card} ${styles.backSide}`}>
+      <div className={styles.backHeader}>
+        <span className={styles.backName}>{team.name}</span>
+        <span className={styles.backLabel}>TEAM PROFILE</span>
+      </div>
+
+      <div className={styles.backStats}>
+        <div className={styles.backRow}>
+          <span className={styles.backLabel}>Base</span>
+          <span className={styles.backValue}>{team.base}</span>
+        </div>
+        <div className={styles.backRow}>
+          <span className={styles.backLabel}>Founded</span>
+          <CountUp target={team.founded} className={styles.backValue} />
+        </div>
+        <div className={styles.backRow}>
+          <span className={styles.backLabel}>Championships</span>
+          <CountUp target={parseInt(team.championships, 10) || 0} className={styles.backValue} />
+        </div>
+        <div className={styles.backRow}>
+          <span className={styles.backLabel}>Team Principal</span>
+          <span className={styles.backValue}>{team.tp}</span>
+        </div>
+      </div>
+
+      <div className={styles.engineNotes}>
+        <div className={styles.engineNotesLabel}>
+          <Wrench size={12} />
+          Engine Notes
+        </div>
+        <p className={styles.description}>{team.engineNote}</p>
+      </div>
+
+      <div className={styles.driverCompare}>
+        <div className={styles.driverCompareLabel}>2026 DRIVERS</div>
+        <div className={styles.driverCompareRow}>
+          {team.drivers.map((d, i) => (
+            <span
+              key={d}
+              className={styles.driverCompareName}
+              style={{
+                borderColor: team.color,
+                backgroundColor: `${team.color}1A`,
+              }}
+            >
+              {i + 1}. {d}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  return <FlipCard front={front} back={back} className={styles.flipCard} />;
 });

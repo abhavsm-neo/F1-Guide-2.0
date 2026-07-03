@@ -15,9 +15,9 @@
   /* ── Borders ── */
   --border-subtle: #1E2028;
   --border-active: #2A2D36;
-  --border-focus: #E10600;
-  --border-glow: #E10600;
-  --border-glow-dim: rgba(225, 6, 0, 0.3);
+  --border-focus: var(--accent);
+  --border-glow: var(--accent);
+  --border-glow-dim: color-mix(in srgb, var(--accent) 30%, transparent);
 
   /* ── Accent ── */
   --accent: #E10600;
@@ -74,7 +74,7 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(225, 6, 0, 0.12);
+  --shadow-glow: 0 0 20px var(--accent-glow);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
   /* ── Radii ── */
@@ -105,8 +105,8 @@
 
   --border-subtle: #D1D5DB;
   --border-active: #B0B3B8;
-  --border-glow: #E10600;
-  --border-glow-dim: rgba(225, 6, 0, 0.2);
+  --border-glow: var(--accent);
+  --border-glow-dim: color-mix(in srgb, var(--accent) 20%, transparent);
 
   --accent-muted: rgba(225, 6, 0, 0.06);
   --accent-glow: rgba(225, 6, 0, 0.1);

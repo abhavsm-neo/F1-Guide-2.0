@@ -6,6 +6,8 @@ import { DRIVERS_2025 } from '../data/drivers';
 import { SectionHeader } from '../components/ui/SectionHeader';
 import { BookmarkButton } from '../components/ui/BookmarkButton';
 import { EmptyState } from '../components/ui/EmptyState';
+import { CountUp } from '../components/ui/CountUp';
+import { PageReveal } from '../components/ui/PageReveal';
 import styles from './TeamProfilePage.module.css';
 
 export default function TeamProfilePage() {
@@ -25,19 +27,19 @@ export default function TeamProfilePage() {
 
   if (!team) {
     return (
-      <div className={styles.page}>
+      <PageReveal className={styles.page}>
         <EmptyState
           icon={Building2}
           title="TEAM NOT FOUND"
           sub={`No team found with ID "${teamId}".`}
           action={{ label: '← Back to Teams', onClick: () => navigate('/teams') }}
         />
-      </div>
+      </PageReveal>
     );
   }
 
   return (
-    <div className={styles.page}>
+    <PageReveal className={styles.page}>
       <div className={styles.sectionHeader}>
         <SectionHeader
           title={team.name}
@@ -71,15 +73,23 @@ export default function TeamProfilePage() {
       {/* Stats grid */}
       <div className={styles.statsGrid}>
         {[
-          { label: 'Founded', value: String(team.founded) },
-          { label: 'Championships', value: team.championships },
+          { label: 'Founded', value: team.founded },
+          { label: 'Championships', value: parseInt(team.championships, 10) || 0 },
           { label: 'Team Principal', value: team.tp },
           { label: 'Engine', value: team.engine },
         ].map((stat) => (
           <div key={stat.label} className={styles.statCard}>
-            <div className={styles.statValue} style={{ color: team.color }}>
-              {stat.value}
-            </div>
+            {typeof stat.value === 'number' ? (
+              <CountUp
+                target={stat.value}
+                className={styles.statValue}
+                style={{ color: team.color }}
+              />
+            ) : (
+              <div className={styles.statValue} style={{ color: team.color }}>
+                {stat.value}
+              </div>
+            )}
             <div className={styles.statLabel}>{stat.label}</div>
           </div>
         ))}
@@ -151,6 +161,6 @@ export default function TeamProfilePage() {
       <button className={styles.backBtn} onClick={() => navigate('/teams')}>
         ← Back to All Teams
       </button>
-    </div>
+    </PageReveal>
   );
 }
