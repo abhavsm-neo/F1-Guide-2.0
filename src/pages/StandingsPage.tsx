@@ -20,15 +20,15 @@ export default function StandingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const YEAR = new Date().getFullYear();
+  const [year, setYear] = useState(2024);
 
   const loadStandings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const [drvData, ctorData] = await Promise.all([
-        fetchDriverStandings(YEAR),
-        fetchConstructorStandings(YEAR),
+        fetchDriverStandings(year),
+        fetchConstructorStandings(year),
       ]);
       setDriverStandings(drvData);
       setConstructorStandings(ctorData);
@@ -38,7 +38,7 @@ export default function StandingsPage() {
     } finally {
       setLoading(false);
     }
-  }, [YEAR]);
+  }, [year]);
 
   useEffect(() => {
     loadStandings();
@@ -51,18 +51,18 @@ export default function StandingsPage() {
   return (
     <PageReveal className={styles.page}>
       <SectionHeader
-        title={`${YEAR}`}
+        title={`${year}`}
         accent="Live Standings"
         group="Race & Stats"
         icon={BarChart3}
-        intro={`Current ${YEAR} World Drivers' and Constructors' Championship standings — always up to date.`}
+        intro={`${year} World Drivers' and Constructors' Championship standings — always up to date.`}
         sectionId="standings"
       />
 
       <div className={styles.liveBar}>
         <div className={styles.liveBadge}>
           <div className={styles.liveDot} data-loading={loading} />
-          <span className={styles.liveText}>LIVE · Jolpica F1 API</span>
+          <span className={styles.liveText}>LIVE · API-Sports F1 API</span>
         </div>
         {lastUpdated && (
           <span className={styles.lastUpdated}>
@@ -78,6 +78,21 @@ export default function StandingsPage() {
           <RotateCcw size={14} className={loading ? styles.spin : ''} /> Refresh
         </button>
       </div>
+
+      {!loading && !error && (
+        <div className={styles.yearSelector}>
+          {[2022, 2023, 2024, 2025, 2026].map((y) => (
+            <button
+              key={y}
+              className={`${styles.yearBtn} ${year === y ? styles.yearBtnActive : ''}`}
+              onClick={() => setYear(y)}
+              aria-pressed={year === y}
+            >
+              {y}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading && (
         <div className={styles.skeletonGrid}>
@@ -100,8 +115,8 @@ export default function StandingsPage() {
       {!loading && !error && driverStandings.length === 0 && (
         <EmptyState
           icon={BarChart3}
-          title={`NO STANDINGS YET FOR ${YEAR}`}
-          sub="Standings will appear after the first race of the season."
+          title={`NO STANDINGS YET FOR ${year}`}
+          sub="Standings will appear after the first race of the season, or the selected year may not be available on the free API plan."
         />
       )}
 
@@ -216,7 +231,7 @@ export default function StandingsPage() {
               })}
             </div>
             <div className={styles.footerNote}>
-              Data via Jolpica F1 API ·{' '}
+              Data via API-Sports F1 API ·{' '}
               {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : ''}
             </div>
           </div>

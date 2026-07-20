@@ -25,7 +25,7 @@ import { PageReveal } from '../components/ui/PageReveal';
 const QUICK_LINKS = [
   { id: '/drivers', icon: Users, label: 'Drivers', sub: 'All 22 on the 2026 grid' },
   { id: '/circuits', icon: MapPin, label: 'Circuits', sub: '22 races, maps & times' },
-  { id: '/results', icon: Trophy, label: 'Live Results', sub: 'Powered by Jolpica F1 API' },
+  { id: '/results', icon: Trophy, label: 'Live Results', sub: 'Powered by API-Sports F1 API' },
   { id: '/preview', icon: BarChart3, label: 'Season Preview', sub: 'Power rankings & picks' },
   { id: '/drivercompare', icon: Sliders, label: 'Driver Compare', sub: 'Head-to-head radar chart' },
   { id: '/championship', icon: Target, label: 'Battle Tracker', sub: 'WDC drama round by round' },

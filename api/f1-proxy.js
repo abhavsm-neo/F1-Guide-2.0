@@ -1,8 +1,8 @@
 // api/f1-proxy.js — Vercel serverless function
-// Proxies Jolpica F1 API and OpenF1 with caching and JSON normalization
+// Proxies API-Sports F1 API with the provided key (server-side only)
 
-const JOLPICA_BASE = "https://api.jolpi.ca/ergast/f1";
-const OPENF1_BASE = "https://api.openf1.org/v1";
+const API_SPORTS_BASE = "https://v1.formula-1.api-sports.io";
+const API_KEY = process.env.APISPORTS_KEY || "466bdcacaa65cbc2ef93d7afb4353f88";
 
 function normalizeJson(body) {
   if (typeof body === "string") {
@@ -25,14 +25,22 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
-  const { path, source = "jolpica" } = req.query;
+  const { endpoint, ...queryParams } = req.query;
 
-  if (!path || typeof path !== "string") {
-    return res.status(400).json({ error: "Missing 'path' query parameter" });
+  if (!endpoint || typeof endpoint !== "string") {
+    return res.status(400).json({ error: "Missing 'endpoint' query parameter" });
   }
 
-  const base = source === "openf1" ? OPENF1_BASE : JOLPICA_BASE;
-  const targetUrl = `${base}/${path.replace(/^\//, "")}`;
+  // Build query string from remaining params
+  const searchParams = new URLSearchParams();
+  for (const [k, v] of Object.entries(queryParams)) {
+    if (v !== undefined && v !== null) {
+      searchParams.append(k, String(v));
+    }
+  }
+
+  const qs = searchParams.toString();
+  const targetUrl = `${API_SPORTS_BASE}/${endpoint}${qs ? "?" + qs : ""}`;
 
   try {
     const controller = new AbortController();
@@ -40,6 +48,7 @@ export default async function handler(req, res) {
 
     const response = await fetch(targetUrl, {
       headers: {
+        "x-apisports-key": API_KEY,
         "User-Agent": "Mozilla/5.0 (compatible; F1Guide/1.0)",
         Accept: "application/json",
       },
@@ -68,8 +77,8 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      source: source === "openf1" ? "openf1" : "jolpica",
-      path: `/${path.replace(/^\//, "")}`,
+      source: "api-sports",
+      endpoint,
       cachedAt: new Date().toISOString(),
       data: body,
     });
