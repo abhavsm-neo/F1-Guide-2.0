@@ -24,7 +24,7 @@ export default function ResultsPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState(2025);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -75,14 +75,14 @@ export default function ResultsPage() {
         accent="Results"
         group="Race & Stats"
         icon={Trophy}
-        intro="Live race results, driver championship standings and constructor standings — powered by the API-Sports F1 API."
+        intro="Live race results, driver championship standings and constructor standings — powered by the Jolpica F1 API."
         sectionId="results"
       />
 
       <div className={styles.liveBar}>
         <div className={styles.liveBadge}>
           <div className={styles.liveDot} data-loading={loading} />
-          <span className={styles.liveText}>LIVE · API-Sports F1 API</span>
+          <span className={styles.liveText}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && (
           <span className={styles.lastUpdated}>
@@ -382,7 +382,7 @@ export default function ResultsPage() {
                 </table>
               </div>
               <div className={styles.footerNote}>
-                After {races.length} of 22 rounds · Data via API-Sports F1 API
+                After {races.length} of 22 rounds · Data via Jolpica F1 API
               </div>
             </>
           )}

@@ -20,7 +20,7 @@ export default function StandingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState(2025);
 
   const loadStandings = useCallback(async () => {
     setLoading(true);
@@ -62,7 +62,7 @@ export default function StandingsPage() {
       <div className={styles.liveBar}>
         <div className={styles.liveBadge}>
           <div className={styles.liveDot} data-loading={loading} />
-          <span className={styles.liveText}>LIVE · API-Sports F1 API</span>
+          <span className={styles.liveText}>LIVE · Jolpica F1 API</span>
         </div>
         {lastUpdated && (
           <span className={styles.lastUpdated}>
@@ -231,7 +231,7 @@ export default function StandingsPage() {
               })}
             </div>
             <div className={styles.footerNote}>
-              Data via API-Sports F1 API ·{' '}
+              Data via Jolpica F1 API ·{' '}
               {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : ''}
             </div>
           </div>
